@@ -6,149 +6,101 @@
 
 
 
-Principais Funcionalidades:
+Linguagem usada no projeto: Python
 
 
 
-1. Controle dos pontos de coleta e usuários
+Principais funcionalidades da 1a release:
 
-- Criar Usuário:
 
 
-. Cadastrar novos usuários e pontos (1va)
 
+- Cadastrar novos usuários e pontos
 
 
 
-. Valida se o cpf ou cnpj é válido (1va)
+-  Validar se o cpf ou cnpj é válido
 
 
 
+- Verificar duplicidade de email
 
-. Verifica duplicidade de email (1va)
 
+- Autenticação dos usuários, do ponto de coleta e do administrador do ponto de coleta
 
 
+- Validação das credenciais
 
-- Login:
 
+- Permite alterar senha ou login
 
 
-. Autenticação dos usuários, do ponto de coleta e do administrador do ponto de coleta (1va)
 
+- Confirmação da nova senha ou novo login
 
 
+- Consulta de usuário por cpf
 
-. Validação das credenciais (1va)
 
 
-- Atualização de senha ou login:
+- Remover usuário do sistema.
 
 
 
+- Linkar as pontuações devidas a cada material (ex: metal= 10 pontos/kg)
 
-. Permite alterar senha ou login (1va)
 
 
+- registrar a data que o usuário foi até o ponto de coleta
 
 
 
-.Confirmação da nova senha ou novo login (1va)
+- Registrar qual material foi levado
 
 
 
+- Atrelamento da pontuação a conta do usuário para acúmulo
 
 
-- Busca de usuário:
 
+- Diferenciação entre administrador e usuário
 
 
-. Consulta por cpf (1va)
 
 
-- Ranking das pessoas cadastradas em uma cidade:
+- Opções para gerenciar a conta
 
-. Atrelar a pontuação dos usuários à um ranking (2va)
 
 
+-  Listagem dos pontos de coleta
 
-- Deletar usuários:
 
 
-. Remove usuário do sistema. (1va)
 
+ Princiais funcionalidades da 2a release: 
 
 
 
+ - Atrelar a pontuação dos usuários à um ranking
 
 
 
-2. Gestão dos resíduos:
+- Ranking
 
 
 
-- Padronização e registro:
+-  Menu de Instruções de como retirar a premiação do ranking e de como levar de forma correta os resíduos para os pontos
 
 
 
-.Linkar as pontuações devidas a cada material (ex: metal= 10 pontos/kg) (1va)
+- atualização do impacto do sistema para a população e para o planeta
 
 
 
 
 
 
-.Data que o usuário foi até o ponto de coleta (1va)
 
-
-
-
-
-. Qual material ele levou (1va)
-
-
-
-
-
-. Atrelamento da pontuação a conta do usuário para acúmulo (1va)
-
-
-
-
-
-3. Interface do usuário:
-
-
-
-- Menu principal:
-
-
-
-. Diferenciação entre administrador e usuário (1va)
-
-
-
-
-. Opções para gerenciar a conta (1va)
-
-
-
-
-- Menu do usuário:
-
-
-
-. Listagem dos pontos de coleta (1va)
-
-
-
-.Ranking (2va)
-
-
-. Instruções de como retirar a premiação do ranking e de como levar de forma correta os resíduos para os pontos (2va)
-
-
-. atualização do impacto do sistema para a população e para o planeta (2va)
 
 
 
