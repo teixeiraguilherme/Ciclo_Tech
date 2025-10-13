@@ -6,7 +6,7 @@ import cadastro
 
 while True:
     entrada = menu_inicial.menu_inicial()
-    if entrada == 1:
+    if entrada == 1: 
         limpar_tela()
         print("Chamando a função de tutorial...")
         aguardar(1)

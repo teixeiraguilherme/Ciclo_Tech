@@ -1,7 +1,11 @@
 import os
 import time
 
+
+
 aguardar = time.sleep
+
+
 
 def limpar_tela():
     if os.name == 'nt': 
@@ -10,43 +14,32 @@ def limpar_tela():
         os.system('clear')
 
 
-def validar_senha():
-    """
-    Valida uma senha de acordo com os critérios de segurança.
-    Retorna True se a senha for válida, e uma mensagem de erro se for inválida.
-    """
-    # Critérios
-    min_comprimento = 8
-    tem_maiuscula = False
-    tem_minuscula = False
-    tem_numero = False
-    tem_especial = False
 
-    # 1. Verifica o comprimento mínimo
-    if len() < min_comprimento:
-        return f"A senha deve ter pelo menos {min_comprimento} caracteres."
+def validar_senha(teste):
+    if len(teste)<8:
+        return "A senha deve haver no mínimo 8 caracteres."
+        letra=False
+        numero=False
+    for caractere in teste:
+        if caractere.isalpha():
+            letra=True
+        elif caractere.isdigit():
+            numero=True
+        else:
+            return "A senha não pode conter caracteres especiais."
+    if not letra:
+        return "A senha não contém letra"
+    if not numero:
+        return "A senha não contém número"
+    return "Aprovada!"
 
-    # 2. Verifica cada caractere
-    for char in ():
-        if char.isupper():
-            tem_maiuscula = True
-        elif char.islower():
-            tem_minuscula = True
-        elif char.isdigit():
-            tem_numero = True
-        # Verifica se é um caractere especial (não é letra nem número)
-        elif not char.isalnum():
-            tem_especial = True
-    
-    # 3. Verifica se todos os critérios foram atendidos
-    if not tem_maiuscula:
-        return "A senha deve conter pelo menos uma letra maiúscula (A-Z)."
-    if not tem_minuscula:
-        return "A senha deve conter pelo menos uma letra minúscula (a-z)."
-    if not tem_numero:
-        return "A senha deve conter pelo menos um número (0-9)."
-    if not tem_especial:
-        return "A senha deve conter pelo menos um caractere especial (ex: !@#$%)."
+
+
+def validar_email(email):
+    posicao_arroba = email.find("@")
+    posicao_ponto = email.rfind(".")
+    if posicao_arroba > 0 and posicao_ponto > posicao_arroba + 1 and not email.endswith("."):
+        if email.count("@") == 1:
+            return True
+    return
         
-    # Se passou por todas as verificações, a senha é forte
-    return "OK"
