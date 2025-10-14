@@ -1,0 +1,18 @@
+[
+    {
+        "nome_ponto": "guiii",
+        "cnpj": "27034344000178",
+        "telefone": "81992252607",
+        "email": "guilherme@gmail.com",
+        "senha": "Gui20006",
+        "endereco": {
+            "cep": "33333333",
+            "rua": "33",
+            "numero": "33",
+            "bairro": "33",
+            "cidade": "33",
+            "estado": "33",
+            "pais": "3"
+        }
+    }
+]

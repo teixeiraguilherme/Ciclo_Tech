@@ -1,5 +1,6 @@
 from utils import limpar_tela, aguardar, validar_senha, validar_email
 import requests
+import json
 
 def cadastro():
     escolher_cadastro = int(input(" 1- cadastro usuário \n 2- cadastro ponto\n Escolha seu cadastro: "))
@@ -12,7 +13,7 @@ def cadastro():
 
 def endereco():
     while True:
-        cep = int(input("Cep: "))
+        cep = str(input("Cep: "))
         cep_limpo = "".join(filter(str.isdigit, cep))
         if len(cep_limpo) == 8:
             break
@@ -24,6 +25,32 @@ def endereco():
     cidade = str(input("Cidade: "))
     estado = str(input("Estado: "))
     pais = str(input("Pais: "))
+
+    endereco_formatado = {
+        "cep": cep_limpo,
+        "rua": rua,
+        "numero": numero,
+        "bairro": bairro,
+        "cidade": cidade,
+        "estado": estado,
+        "pais": pais,
+    }
+    return endereco_formatado
+    
+def carregar_pontos():
+    try:
+        with open("pontos.json", "r", encoding = "utf-8") as arquivo_ponto:
+            conteudo_ponto =  arquivo_ponto.read()
+            if not conteudo_ponto:
+                return []
+            return json.loads(conteudo_ponto)
+    except FileNotFoundError:
+        with open("pontos.json", "w", encoding = "utf-8") as arquivo_ponto:
+            json.dump([], arquivo_ponto)
+
+def salvar_pontos(lista_de_pontos):
+    with open("pontos.json", "w", encoding = "utf-8") as arquivo_ponto:
+        json.dump(lista_de_pontos, arquivo_ponto, indent=4, ensure_ascii=False)
 
 def cadastro_ponto():
     limpar_tela()
@@ -99,9 +126,24 @@ def cadastro_ponto():
             print("Senha criada")
             break
     endereco()
+    endereco_formatado = endereco()
     while True:
         confirmar_cadastro_ponto = int(input("\n Confirmar cadastro \n [1] Sim \n[2] Não \n"))
         if confirmar_cadastro_ponto == 1:
+            pontos_existentes = carregar_pontos()
+            novo_ponto = {
+                "nome_ponto": nome_ponto,
+                "cnpj": cnpj_limpo,
+                "telefone": numero_limpo_ponto,
+                "email": email_ponto,
+                "senha": senha_ponto,
+                "endereco": endereco_formatado,
+                
+            }
+            pontos_existentes.append(novo_ponto)
+
+            salvar_pontos(pontos_existentes)
+
             print("CADASTRO EFETIVADO, PARABÉNS!!")
             aguardar(2)
             break
@@ -116,6 +158,22 @@ def cadastro_ponto():
                     break
         else: 
             print("Insira um número válido: ")
+
+def carregar_usuarios():
+    try:
+        with open('usuarios.json', 'r', encoding= "utf-8") as arquivo_usuario:
+            conteudo_usuario = arquivo_usuario.read()
+            if not conteudo_usuario:
+                return []
+            return json.loads(conteudo_usuario)
+    except FileNotFoundError:
+        with open("usuarios.json", "w", encoding = "utf-8") as arquivo_usuario:
+            json.dump([], arquivo_usuario)
+        return []
+
+def salvar_usuarios(lista_de_usuarios):
+    with open('usuarios.json', 'w', encoding='utf-8') as arquivo_usuario:
+        json.dump(lista_de_usuarios, arquivo_usuario, indent=4, ensure_ascii=False)
 
 def cadastro_usuario():
     limpar_tela()
@@ -180,6 +238,22 @@ def cadastro_usuario():
     while True:
         confirmar_cadastro_usuario = int(input("\n Confirmar cadastro \n [1] Sim \n[2] Não \n"))
         if confirmar_cadastro_usuario == 1:
+            usuarios_existentes = carregar_usuarios()
+            # 2. Cria um dicionário com os dados do novo usuário
+            novo_usuario = {
+                "nome": nome_usuario,
+                "cpf": cpf_limpo,
+                "cidade": cidade_usuario,
+                "telefone": numero_limpo_usuario,
+                "email": email_usuario,
+                "senha": senha_usuario 
+            }
+            
+            # 3. Adiciona o novo usuário à lista
+            usuarios_existentes.append(novo_usuario)
+
+            # 4. Salva a lista inteira (com o novo usuário) de volta no arquivo
+            salvar_usuarios(usuarios_existentes)
             print("CADASTRO EFETIVADO, PARABÉNS!!")
             aguardar(2)
             break
@@ -232,3 +306,4 @@ def cadastro_usuario():
                 aguardar(2)
         # --- FIM DA VALIDAÇÃO DE CPF ---
 '''
+cadastro()
