@@ -14,5 +14,37 @@
             "estado": "33",
             "pais": "3"
         }
+    },
+    {
+        "nome_ponto": "guilll",
+        "cnpj": "27034344000178",
+        "telefone": "81992252607",
+        "email": "guiii@gmail.com",
+        "senha": "gui20006",
+        "endereco": {
+            "cep": "54806577",
+            "rua": "54",
+            "numero": "33",
+            "bairro": "33",
+            "cidade": "33",
+            "estado": "33",
+            "pais": "33"
+        }
+    },
+    {
+        "nome_ponto": "GUIiiiiiii",
+        "cnpj": "27034344000178",
+        "telefone": "81992252607",
+        "email": "guilherme@gmail.com",
+        "senha": "gui20006",
+        "endereco": {
+            "cep": "54806577",
+            "rua": "ruuaa",
+            "numero": "33",
+            "bairro": "33",
+            "cidade": "33",
+            "estado": "33",
+            "pais": "33"
+        }
     }
 ]

@@ -2,7 +2,6 @@ import os
 import time
 
 
-
 aguardar = time.sleep
 
 
@@ -18,8 +17,8 @@ def limpar_tela():
 def validar_senha(teste):
     if len(teste)<8:
         return "A senha deve haver no mínimo 8 caracteres."
-        letra=False
-        numero=False
+    letra=False
+    numero=False
     for caractere in teste:
         if caractere.isalpha():
             letra=True

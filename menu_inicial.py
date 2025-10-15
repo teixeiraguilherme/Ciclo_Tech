@@ -10,8 +10,6 @@ def menu_inicial():
     
     try:
         entrada = int(input("\nQual função deseja: "))
-        # A LINHA MAIS IMPORTANTE DO ARQUIVO:
-        return entrada # <<--- DEVOLVE O NÚMERO PARA O MAIN.PY
+        return entrada
     except ValueError:
-        # Se der erro, devolve um número inválido
         return -1

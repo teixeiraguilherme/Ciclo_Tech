@@ -3,11 +3,15 @@ import requests
 import json
 
 def cadastro():
-    escolher_cadastro = int(input(" 1- cadastro usuário \n 2- cadastro ponto\n Escolha seu cadastro: "))
+    escolher_cadastro = int(input(" 1- cadastro usuário \n 2- cadastro ponto\n 0- Voltar ao menu \nEscolha seu cadastro: "))
     if escolher_cadastro == 1:
         cadastro_usuario()
     elif escolher_cadastro == 2:
         cadastro_ponto()
+    elif escolher_cadastro == 0:
+        print("Voltando ao menu...")
+        aguardar(2)
+        return 
     else:
         print("Insira um número válido: ")
 
@@ -58,24 +62,26 @@ def cadastro_ponto():
         nome_ponto = str(input("Nome: "))
         if len(nome_ponto)<5:
             print("Digite um nome com no mínimo 5 caracteres.")
+        elif not nome_ponto.isalpha():
+            print("O nome deve conter apenas letras.")
         else:
             break
+        
+        
     while True:
         cnpj = str(input("Cnpj: "))
         cnpj_limpo = "".join(filter(str.isdigit, cnpj))
-
         # Lógica da API agora está diretamente aqui dentro
         url = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj_limpo}"
         print(f"\nConsultando CNPJ {cnpj_limpo}, por favor aguarde...")
         
         try:
-            response = requests.get(url, timeout=10) # Timeout de 10 segundos
-            
+            response = requests.get(url, timeout=10)
             # Se o CNPJ for válido, extrai os dados e quebra o loop
             if response.status_code == 200:
-                dados = response.json()
-                print("✔ CNPJ Válido!")
-                print(f"  Razão Social: {dados.get('razao_social')}")
+                #dados = response.json()
+                print("CNPJ Válido!")
+                #print(f"Razão Social: {dados.get('razao_social')}")
                 aguardar(2)
                 break # Sai do loop e continua o cadastro
             
@@ -115,6 +121,14 @@ def cadastro_ponto():
         if resultado == "Aprovada!":
             print("senha válida")
             break
+        elif resultado == "A senha não contém letra":
+            print("A senha não contém letra")
+        elif resultado == "A senha não contém número":
+            print("A senha não contém número")
+        elif resultado == "A senha deve haver no mínimo 8 caracteres.":
+            print("A senha deve haver no mínimo 8 caracteres.")
+        elif resultado == "A senha não pode conter caracteres especiais.":
+            print("A senha não pode conter caracteres especiais.")
         else:
             print("tente novamente")
     while True:
@@ -125,7 +139,6 @@ def cadastro_ponto():
         elif senha_ponto == confirmar_senha_ponto:
             print("Senha criada")
             break
-    endereco()
     endereco_formatado = endereco()
     while True:
         confirmar_cadastro_ponto = int(input("\n Confirmar cadastro \n [1] Sim \n[2] Não \n"))
@@ -138,15 +151,12 @@ def cadastro_ponto():
                 "email": email_ponto,
                 "senha": senha_ponto,
                 "endereco": endereco_formatado,
-                
             }
             pontos_existentes.append(novo_ponto)
-
             salvar_pontos(pontos_existentes)
-
             print("CADASTRO EFETIVADO, PARABÉNS!!")
             aguardar(2)
-            break
+            return
         elif confirmar_cadastro_ponto == 2:
             while True:
                 reiniciar = int(input("Deseja reiniciar? \n [1] Sim \n[2] Não \n"))
@@ -181,6 +191,8 @@ def cadastro_usuario():
         nome_usuario = str(input("Nome: "))
         if len(nome_usuario)<5:
             print("Digite um nome com no mínimo 5 caracteres.")
+        elif not nome_usuario.isalpha():
+            print("O nome deve conter apenas letras.")
         else:
             break
 
@@ -188,7 +200,7 @@ def cadastro_usuario():
         cpf = str(input("Cpf: "))
         cpf_limpo = "".join(filter(str.isdigit, cpf))
         if len(cpf_limpo) == 11:
-            print("✔ CPF com formato válido!")
+            print("CPF com formato válido!")
             break
         else:
             print("O cpf é inválido. Ele deve conter 11 números.")
@@ -223,6 +235,14 @@ def cadastro_usuario():
         resultado_senha_usuario = validar_senha(senha_usuario)
         if resultado_senha_usuario == "Aprovada!":
             print("senha válida")
+        elif resultado_senha_usuario == "A senha não contém letra":
+            print("A senha não contém letra")
+        elif resultado_senha_usuario == "A senha não contém número":
+            print("A senha não contém número")
+        elif resultado_senha_usuario == "A senha deve haver no mínimo 8 caracteres.":
+            print("A senha deve haver no mínimo 8 caracteres.")
+        elif resultado_senha_usuario == "A senha não pode conter caracteres especiais.":
+            print("A senha não pode conter caracteres especiais.")
             break
         else:
             print("tente novamente")
@@ -239,7 +259,6 @@ def cadastro_usuario():
         confirmar_cadastro_usuario = int(input("\n Confirmar cadastro \n [1] Sim \n[2] Não \n"))
         if confirmar_cadastro_usuario == 1:
             usuarios_existentes = carregar_usuarios()
-            # 2. Cria um dicionário com os dados do novo usuário
             novo_usuario = {
                 "nome": nome_usuario,
                 "cpf": cpf_limpo,
@@ -249,14 +268,12 @@ def cadastro_usuario():
                 "senha": senha_usuario 
             }
             
-            # 3. Adiciona o novo usuário à lista
             usuarios_existentes.append(novo_usuario)
-
-            # 4. Salva a lista inteira (com o novo usuário) de volta no arquivo
             salvar_usuarios(usuarios_existentes)
+
             print("CADASTRO EFETIVADO, PARABÉNS!!")
             aguardar(2)
-            break
+            return 
         elif confirmar_cadastro_usuario == 2:
             while True:
                 reiniciar_usuario = int(input("Deseja reiniciar? \n [1] Sim \n[2] Não \n"))
@@ -306,4 +323,3 @@ def cadastro_usuario():
                 aguardar(2)
         # --- FIM DA VALIDAÇÃO DE CPF ---
 '''
-cadastro()
