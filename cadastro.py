@@ -56,6 +56,20 @@ def salvar_pontos(lista_de_pontos):
     with open("pontos.json", "w", encoding = "utf-8") as arquivo_ponto:
         json.dump(lista_de_pontos, arquivo_ponto, indent=4, ensure_ascii=False)
 
+def email_existe(email_para_checar):
+    usuarios = carregar_usuarios()
+    pontos = carregar_pontos()
+
+    for usuario in usuarios:
+        if usuario['email'] == email_para_checar:
+            return True 
+
+    for ponto in pontos:
+        if ponto['email'] == email_para_checar:
+            return True 
+
+    return False
+
 def cadastro_ponto():
     limpar_tela()
     while True:
@@ -71,21 +85,16 @@ def cadastro_ponto():
     while True:
         cnpj = str(input("Cnpj: "))
         cnpj_limpo = "".join(filter(str.isdigit, cnpj))
-        # Lógica da API agora está diretamente aqui dentro
         url = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj_limpo}"
         print(f"\nConsultando CNPJ {cnpj_limpo}, por favor aguarde...")
         
         try:
             response = requests.get(url, timeout=10)
-            # Se o CNPJ for válido, extrai os dados e quebra o loop
             if response.status_code == 200:
-                #dados = response.json()
                 print("CNPJ Válido!")
-                #print(f"Razão Social: {dados.get('razao_social')}")
                 aguardar(2)
-                break # Sai do loop e continua o cadastro
+                break
             
-            # Se o CNPJ for inválido, avisa o usuário e o loop recomeça
             else:
                 print(f"✖ ERRO: CNPJ não encontrado ou inválido. Tente novamente.")
                 aguardar(2)
@@ -104,10 +113,14 @@ def cadastro_ponto():
     while True:
         email_ponto = str(input("Email: "))
         if validar_email(email_ponto):
-            print("Email válido!")
-            break
+            if email_existe(email_ponto):
+                print("❌ Ops! Esse email já está cadastrado. Tente outro.")
+                aguardar(2)
+            else:
+                break
         else: 
             print("Email inválido, digite um correto")
+        
     while True:
         confirmar_email_ponto = str(input("Confirme seu email: "))
         if email_ponto == confirmar_email_ponto:
@@ -218,8 +231,11 @@ def cadastro_usuario():
     while True:
         email_usuario = str(input("Email: "))
         if validar_email(email_usuario):
-            print("Email válido!")
-            break
+            if email_existe(email_usuario):
+                print("❌ Ops! Esse email já está cadastrado. Tente outro.")
+                aguardar(2)
+            else:
+                break
         else: 
             print("Email inválido, digite um correto")
     while True:
@@ -243,9 +259,9 @@ def cadastro_usuario():
             print("A senha deve haver no mínimo 8 caracteres.")
         elif resultado_senha_usuario == "A senha não pode conter caracteres especiais.":
             print("A senha não pode conter caracteres especiais.")
-            break
         else:
             print("tente novamente")
+
     while True:
         confirmar_senha_usuario = str(input("Confirme sua senha: "))
         if senha_usuario != confirmar_senha_usuario:
@@ -286,40 +302,3 @@ def cadastro_usuario():
         else: 
             print("Insira um número válido: ")
 
-''' while True:
-            cpf = str(input("Cpf: "))
-            cpf_limpo = "".join(filter(str.isdigit, cpf))
-
-            if len(cpf_limpo) != 11:
-                print(f"✖ ERRO: O CPF '{cpf}' é inválido. Ele deve conter 11 números.")
-                continue
-
-            # URL da nova API para consulta
-            url = f"https://api.sinonimos.com.br/v2/cpf/{cpf_limpo}"
-            print(f"\nConsultando CPF {cpf_limpo}, por favor aguarde...")
-
-            try:
-                response = requests.get(url, timeout=10)
-                
-                if response.status_code == 200:
-                    dados = response.json()
-                    # Esta API retorna um campo 'status'. Se for True, o CPF é válido.
-                    if dados.get('status') is True:
-                        print("✔ CPF Válido!")
-                        print(f"  Nome: {dados.get('data', {}).get('nome')}")
-                        cpf = cpf_limpo
-                        break
-                    else:
-                        # A API pode retornar uma mensagem de erro, vamos mostrá-la
-                        mensagem_erro = dados.get('message', 'CPF inválido ou não encontrado.')
-                        print(f"✖ ERRO: {mensagem_erro} Tente novamente.")
-                        aguardar(2)
-                else:
-                    print(f"✖ ERRO: Falha ao consultar o serviço de CPF. Tente novamente.")
-                    aguardar(2)
-
-            except requests.exceptions.RequestException:
-                print("✖ ERRO: Falha na conexão. Verifique sua internet e tente novamente.")
-                aguardar(2)
-        # --- FIM DA VALIDAÇÃO DE CPF ---
-'''
