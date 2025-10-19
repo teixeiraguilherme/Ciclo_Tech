@@ -2,13 +2,11 @@
 from cadastro import carregar_usuarios, carregar_pontos, salvar_usuarios, salvar_pontos
 from utils import limpar_tela, aguardar, validar_senha, validar_email
 import json
-from menu_usuario import menu_usuario
-from menu_ponto import menu_ponto
 
 def login():
     limpar_tela()
     print("--- 🔒 TELA DE LOGIN ---")
-    
+
     print("1. Logar")
     print("2. Esqueci minha senha")
     print("0. Voltar ao menu principal")
@@ -60,24 +58,24 @@ def login():
 
             if conta_encontrada['senha'] == senha_login:
                 if tipo_conta == "usuario":
-                    print(f"\nBem-vindo, {conta_encontrada.get('nome')}!")
                     aguardar(2)
-                    return "usuario", conta_encontrada.get('nome')
+                    return "usuario", usuario
 
                 
                 elif tipo_conta == "ponto":
-                    print(f"\nBem-vindo, {conta_encontrada.get('nome_ponto')}!")
                     aguardar(2)
-                    return "ponto", conta_encontrada.get('nome_ponto')
+                    return "ponto", ponto
             
             else:
-                print("\n❌ Senha incorreta. Tente novamente.")
+                print("\n❌ Senha incorreta")
+                confirmar = input("Deseja redefinir a senha? [1] Sim [2] Não ")
+                if confirmar == '1':
+                    esqueci_minha_senha()
+                    return login()  
+                else:
+                    print("digite a senha novamente.")
                 aguardar(1)
-                # O 'while True' da SENHA vai rodar de novo, pedindo a senha
 
-# --- Funções de ESQUECI A SENHA (só copiar e colar, já estavam boas) ---
-# ... (cole aqui as funções 'esqueci_minha_senha' e 'pedir_nova_senha_validada' 
-#      que eu te mandei na resposta anterior) ...
 def esqueci_minha_senha():
     limpar_tela()
     print("--- 🔑 RECUPERAÇÃO DE SENHA ---")

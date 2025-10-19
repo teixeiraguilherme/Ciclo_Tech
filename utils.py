@@ -40,4 +40,3 @@ def validar_email(email):
         if email.count("@") == 1:
             return True
     return
-        

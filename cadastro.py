@@ -70,14 +70,32 @@ def email_existe(email_para_checar):
 
     return False
 
+def cpf_existe(cpf_checar):
+    usuarios = carregar_usuarios()
+
+    for usuario in usuarios:
+        if usuario['cpf'] == cpf_checar:
+            return True 
+
+    return False
+
+def cnpj_existe(cnpj_checar):
+    pontos = carregar_pontos()
+
+    for ponto in pontos:
+        if ponto['cnpj'] == cnpj_checar:
+            return True 
+
+    return False
+
+
+
 def cadastro_ponto():
     limpar_tela()
     while True:
         nome_ponto = str(input("Nome: "))
         if len(nome_ponto)<5:
             print("Digite um nome com no mínimo 5 caracteres.")
-        elif not nome_ponto.isalpha():
-            print("O nome deve conter apenas letras.")
         else:
             break
         
@@ -91,10 +109,15 @@ def cadastro_ponto():
         try:
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
-                print("CNPJ Válido!")
-                aguardar(2)
-                break
-            
+                if cnpj_existe(cnpj_limpo):
+                    print("❌ Ops! Esse CNPJ já está cadastrado. Tente outro.")
+                    aguardar(2)
+                    continue
+                else: 
+                    print("CNPJ Válido!")
+                    aguardar(2)
+                    break
+                
             else:
                 print(f"✖ ERRO: CNPJ não encontrado ou inválido. Tente novamente.")
                 aguardar(2)
@@ -204,8 +227,6 @@ def cadastro_usuario():
         nome_usuario = str(input("Nome: "))
         if len(nome_usuario)<5:
             print("Digite um nome com no mínimo 5 caracteres.")
-        elif not nome_usuario.isalpha():
-            print("O nome deve conter apenas letras.")
         else:
             break
 
@@ -213,8 +234,12 @@ def cadastro_usuario():
         cpf = str(input("Cpf: "))
         cpf_limpo = "".join(filter(str.isdigit, cpf))
         if len(cpf_limpo) == 11:
-            print("CPF com formato válido!")
-            break
+            if cpf_existe(cpf_limpo):
+                print("❌ Ops! Esse CPF já está cadastrado. Tente outro.")
+                aguardar(2)
+            else:
+                print("CPF com formato válido!")
+                break
         else:
             print("O cpf é inválido. Ele deve conter 11 números.")
 
@@ -251,6 +276,7 @@ def cadastro_usuario():
         resultado_senha_usuario = validar_senha(senha_usuario)
         if resultado_senha_usuario == "Aprovada!":
             print("senha válida")
+            break
         elif resultado_senha_usuario == "A senha não contém letra":
             print("A senha não contém letra")
         elif resultado_senha_usuario == "A senha não contém número":
@@ -301,4 +327,6 @@ def cadastro_usuario():
                     break
         else: 
             print("Insira um número válido: ")
-
+    
+def cadastro_reciclagem():
+    pass  # Função placeholder para cadastro de reciclagem
