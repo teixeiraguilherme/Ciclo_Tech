@@ -3,10 +3,14 @@ from utils import limpar_tela, aguardar, validar_senha, validar_email
 import login
 import menu_inicial
 import json
+from rich.console import Console
+from rich.prompt import Prompt
+
+console = Console()
 
 def perfil_ponto(usuario_logado):
     limpar_tela()
-    print("--- 🏢 MEU PERFIL ---")
+    console.print("--- 🏢 MEU PERFIL ---", style = "bold green")
     pontos = carregar_pontos()
     for ponto in pontos:
         endereco_format = usuario_logado.get('endereco')
@@ -24,11 +28,11 @@ def perfil_ponto(usuario_logado):
     print(f"Endereço: \t{rua}, {numero}, {bairro}, {cidade} - {estado} / {cep}")
     aguardar(3) 
 
-    print("\n[1] Editar perfil")
-    print("[2] Editar endereço")
-    print("[3] Excluir conta")
-    print("[4] Redifinir senha")
-    print("[0] Voltar menu anterior")
+    console.print("\n[1] Editar perfil")
+    console.print("[2] Editar endereço")
+    console.print("[3] Excluir conta")
+    console.print("[4] Redifinir senha")
+    console.print("[0] Voltar menu anterior")
 
     try:
         entrada_perfil = int(input("\nEscolha uma opção: "))
@@ -38,7 +42,7 @@ def perfil_ponto(usuario_logado):
 
 def editar_ponto(usuario_logado):
     limpar_tela()
-    print("--- ✏️ EDITAR PERFIL DO USUÁRIO ---")
+    console.print("--- ✏️ EDITAR PERFIL DO USUÁRIO ---", style="bold green")
     pontos = carregar_pontos()
 
     for ponto in pontos:
@@ -54,7 +58,7 @@ def editar_ponto(usuario_logado):
                 else:
                     print("Nome muito curto, tente novamente.")
             while True:
-                novo_telefone = input(f"Telefone ({ponto['telefone']}): ")
+                novo_telefone = input(f"\nTelefone ({ponto['telefone']}): ")
                 novo_telefone_limpo = "".join(filter(str.isdigit, novo_telefone))
                 if novo_telefone_limpo == "":
                     novo_telefone_limpo = ponto['telefone']
@@ -64,7 +68,7 @@ def editar_ponto(usuario_logado):
                 else:
                     print("Telefone inválido, tente novamente.")
             while True:
-                novo_email = input(f"Email ({ponto['email']}): ")
+                novo_email = input(f"\nEmail ({ponto['email']}): ")
                 if novo_email == "":
                     novo_email = ponto['email']
                     pass    

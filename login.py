@@ -1,13 +1,16 @@
 from cadastro import carregar_usuarios, carregar_pontos, salvar_usuarios, salvar_pontos
 from utils import limpar_tela, aguardar, validar_senha, validar_email
+from rich.console import Console
+from rich.prompt import Prompt
+console = Console()
+
 
 def login():
     limpar_tela()
-    print("--- 🔒 TELA DE LOGIN ---")
-
-    print("1. Logar")
-    print("2. Esqueci minha senha")
-    print("0. Voltar ao menu principal")
+    console.print("--- 🔒 TELA DE LOGIN ---", style="bold green\n")
+    print("[1] Logar")
+    print("[2] Esqueci minha senha")
+    print("[3] Voltar ao menu principal")
     opcao_login = input("\nEscolha uma opção: ")
 
     if opcao_login == '1':
@@ -47,13 +50,13 @@ def login():
             print("\n❌ Email não cadastrado no sistema. Tente novamente.")
             aguardar(2)
             limpar_tela()
-            print("--- 🔒 TELA DE LOGIN ---")
+            console.print("--- 🔒 TELA DE LOGIN ---", style="bold green")
             continue
 
         print(f"\nEmail encontrado! Agora digite a senha.")
       
         while True:
-            senha_login = input("Digite sua senha: ")
+            senha_login = input("\nDigite sua senha: ")
 
             if conta_encontrada['senha'] == senha_login:
                 if tipo_conta == "usuario":
@@ -77,7 +80,7 @@ def login():
 
 def esqueci_minha_senha():
     limpar_tela()
-    print("--- 🔑 RECUPERAÇÃO DE SENHA ---")
+    console.print("--- 🔑 RECUPERAÇÃO DE SENHA ---", style="bold cyan")
     email_rec = input("Digite o email da conta que você quer recuperar: ")
 
     if not validar_email(email_rec):
@@ -115,10 +118,10 @@ def esqueci_minha_senha():
 
 def pedir_nova_senha_validada():
     while True:
-        nova_senha = input("Digite sua nova senha: ")
+        nova_senha = input("\nDigite sua nova senha: ")
         resultado_nova_senha = validar_senha(nova_senha)
         if resultado_nova_senha == "Aprovada!":
-            confirmar_senha = input("Confirme sua nova senha: ")
+            confirmar_senha = input("\nConfirme sua nova senha: ")
             if nova_senha == confirmar_senha:
                 return nova_senha 
             else:

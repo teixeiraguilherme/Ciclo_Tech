@@ -216,14 +216,14 @@ def cadastro_ponto():
 
     while True:
         console.print("Senha deve conter 8+ caracteres, 1 letra e 1 número, sem caracteres especiais.", style="bold cyan")
-        senha = Prompt.ask("Criar senha", password=True)
+        senha = Prompt.ask("Criar senha")
         resultado = validar_senha(senha)
         if resultado == "Aprovada!":
             break
         console.print(resultado, style="bold red")
 
     while True:
-        confirmar_senha = Prompt.ask("Confirme sua senha", password=True)
+        confirmar_senha = Prompt.ask("Confirme sua senha")
         if senha == confirmar_senha:
             break
         console.print("Senhas diferentes, tente novamente.", style="bold red")
@@ -265,3 +265,4 @@ def cadastro():
         cadastro_ponto()
     else:
         return
+
