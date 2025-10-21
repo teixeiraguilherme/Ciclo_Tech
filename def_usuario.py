@@ -57,7 +57,7 @@ def editar_usuario(usuario_logado):
             while True:
                 novo_nome = input(f"Nome ({usuario['nome']}): ")
                 if novo_nome == "":
-                    novo_nome = usuario['nome_ponto']
+                    novo_nome = usuario['nome']
                     pass
                 if len(novo_nome) > 4:
                     break
@@ -80,8 +80,8 @@ def editar_usuario(usuario_logado):
                 novo_email = input(f"Email ({usuario['email']}): ")
                 if novo_email == "":
                     novo_email = usuario['email']
-                    pass    
-                if validar_email(novo_email):
+                    break    
+                elif validar_email(novo_email):
                     if email_existe(novo_email):
                         print("❌ Ops! Esse email já está cadastrado. Tente outro.")
                     else:

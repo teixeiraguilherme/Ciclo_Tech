@@ -1,1 +1,17 @@
-[]
+[
+    {
+        "nome_ponto": "Ponto Recife",
+        "cnpj": "01116583000183",
+        "telefone": "",
+        "email": "arturpmr1904@gmail.com",
+        "senha": "Art07890",
+        "endereco": {
+            "rua": "ceara",
+            "numero": "148",
+            "bairro": "encruzilhada",
+            "cidade": "recife",
+            "estado": "pernambuco",
+            "cep": ""
+        }
+    }
+]

@@ -1,7 +1,5 @@
-# (Imports que você já tem no seu arquivo)
 from cadastro import carregar_usuarios, carregar_pontos, salvar_usuarios, salvar_pontos
 from utils import limpar_tela, aguardar, validar_senha, validar_email
-import json
 
 def login():
     limpar_tela()
@@ -11,19 +9,21 @@ def login():
     print("2. Esqueci minha senha")
     print("0. Voltar ao menu principal")
     opcao_login = input("\nEscolha uma opção: ")
+
     if opcao_login == '1':
         pass
     elif opcao_login == '2':
         esqueci_minha_senha()
         return login()  
     elif opcao_login == '0':
-        return 
+        return None, None  # <<< agora retorna tupla
     else:
         print("\nOpção inválida!")
         aguardar(1)
+        return None, None
 
     while True:
-        email_login = input("Digite seu email: ")
+        email_login = input("\nDigite seu email: ")
 
         conta_encontrada = None
         tipo_conta = None 
@@ -43,7 +43,6 @@ def login():
                     tipo_conta = "ponto"
                     break
         
-        
         if not conta_encontrada:
             print("\n❌ Email não cadastrado no sistema. Tente novamente.")
             aguardar(2)
@@ -59,12 +58,10 @@ def login():
             if conta_encontrada['senha'] == senha_login:
                 if tipo_conta == "usuario":
                     aguardar(2)
-                    return "usuario", usuario
-
-                
+                    return "usuario", conta_encontrada  # <<< retorna conta correta
                 elif tipo_conta == "ponto":
                     aguardar(2)
-                    return "ponto", ponto
+                    return "ponto", conta_encontrada
             
             else:
                 print("\n❌ Senha incorreta")
@@ -73,8 +70,10 @@ def login():
                     esqueci_minha_senha()
                     return login()  
                 else:
-                    print("digite a senha novamente.")
+                    print("Digite a senha novamente.")
                 aguardar(1)
+
+    return None, None  # <<< caso algum loop termine inesperadamente
 
 def esqueci_minha_senha():
     limpar_tela()
@@ -84,7 +83,7 @@ def esqueci_minha_senha():
     if not validar_email(email_rec):
         print("\n❌ Formato de email inválido. Tente novamente.")
         aguardar(2)
-        return
+        return None, None
 
     usuarios = carregar_usuarios()
     for i, usuario in enumerate(usuarios):
@@ -96,7 +95,7 @@ def esqueci_minha_senha():
                 salvar_usuarios(usuarios) 
                 print("\n✅ Senha de USUÁRIO alterada com sucesso!")
                 aguardar(2)
-                return 
+                return None, None
 
     pontos = carregar_pontos()
     for i, ponto in enumerate(pontos):
@@ -108,10 +107,11 @@ def esqueci_minha_senha():
                 salvar_pontos(pontos) 
                 print("\n✅ Senha de PONTO DE COLETA alterada com sucesso!")
                 aguardar(2)
-                return
+                return None, None
 
     print("\n❌ Email não encontrado em nosso sistema.")
     aguardar(3)
+    return None, None
 
 def pedir_nova_senha_validada():
     while True:
@@ -122,7 +122,7 @@ def pedir_nova_senha_validada():
             if nova_senha == confirmar_senha:
                 return nova_senha 
             else:
-                print("\n    ❌ As senhas não coincidem. Tente novamente.")
+                print("\n❌ As senhas não coincidem. Tente novamente.")
                 
         elif resultado_nova_senha == "A senha não contém letra":
             print("A senha não contém letra")
@@ -133,4 +133,4 @@ def pedir_nova_senha_validada():
         elif resultado_nova_senha == "A senha não pode conter caracteres especiais.":
             print("A senha não pode conter caracteres especiais.")
         else:
-            print("tente novamente")
+            print("Tente novamente")
