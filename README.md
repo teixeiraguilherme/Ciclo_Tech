@@ -39,7 +39,7 @@ O fluxo é simples:
 
 <h4>RF002 - Cadastro usuário</h4> <p>Permite que novos usuários criem uma conta pessoal na plataforma, fornecendo dados básicos (como nome, e-mail e senha).</p>
 
-<h4>RF003 - Cadastro ponto</h4> <p>Funcionalidade dedicada ao registro de novos pontos de coleta (cooperativas, ecopontos) no sistema, incluindo localização e tipos de materiais aceitos.</p>
+<h4>RF003 - Cadastro ponto</h4> <p>Funcionalidade dedicada ao registro de novos pontos de coleta (cooperativas, ecopontos) no sistema, incluindo localização.</p>
 
 <h4>RF004 - Login de usuário e ponto</h4> <p>Sistema de autenticação que permite o acesso seguro de usuários (que reciclam) e administradores de pontos (que recebem material) às suas respectivas contas.</p>
 
