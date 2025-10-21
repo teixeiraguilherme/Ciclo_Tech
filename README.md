@@ -33,26 +33,35 @@ O fluxo é simples:
 
 ##
 
-<h2>🖋️FUNCIONALIDADES PRIMEIRA VA</h2>
+<h2>🖋️FUNCIONALIDADES PRIMEIRA RELEASE </h2>
 
-<h4>RF001 - Menu inicial</h4>
-<h4>RF002 -  Cadastro usuário</h4>
-<h4>RF003 -  Cadastro ponto</h4>
-<h4>RF004 -  Login de usuário e ponto</h4>
-<h4>RF005 -  Tutorial</h4>
-<h4>RF0010 -  Procurar pontos</h4>
-<h4>RF012 -  Perfil </h4>
-<h4>RF013 - Atualizar perfil </h4>
+<h4>RF001 - Menu inicial</h4> <p>Tela principal da aplicação, servindo como ponto de partida e hub de navegação para as demais funcionalidades centrais.</p>
 
-##
+<h4>RF002 - Cadastro usuário</h4> <p>Permite que novos usuários criem uma conta pessoal na plataforma, fornecendo dados básicos (como nome, e-mail e senha).</p>
 
-<h2>🖋️FUNCIONALIDADES SEGUNDA VA</h2>
+<h4>RF003 - Cadastro ponto</h4> <p>Funcionalidade dedicada ao registro de novos pontos de coleta (cooperativas, ecopontos) no sistema, incluindo localização e tipos de materiais aceitos.</p>
 
-<h4>RF006 -  Ranking </h4>
-<h4>RF007 -  Impactos</h4>
-<h4>RF008 -  Calculadora de conversão</h4>
-<h4>RF009 - Registro de reciclagem</h4>
-<h4>RF011 -  Indicações</h4>
+<h4>RF004 - Login de usuário e ponto</h4> <p>Sistema de autenticação que permite o acesso seguro de usuários (que reciclam) e administradores de pontos (que recebem material) às suas respectivas contas.</p>
+
+<h4>RF005 - Tutorial</h4> <p>Guia inicial (onboarding) apresentado ao usuário no primeiro acesso, explicando o fluxo básico de uso da aplicação.</p>
+
+<h4>RF0010 - Procurar pontos</h4> <p>Ferramenta para exibir todos os pontos para o usuário localizar os pontos de coleta mais próximos de sua localização.</p>
+
+<h4>RF012 - Perfil </h4> <p>Tela onde o usuário visualiza suas informações pessoais, pode editar e excluir.</p>
+
+<h4>RF013 - Atualizar perfil </h4> <p>Permite ao usuário editar e salvar alterações em suas informações de cadastro (ex: mudar senha, mudar email, corrigir nome).</p>
+
+<h2>🖋️FUNCIONALIDADES SEGUNDA RELEASE</h2>
+
+<h4>RF006 - Ranking </h4> <p>Exibição de uma tabela de classificação (leaderboard) que posiciona os usuários com base em seu volume de reciclagem ou pontuação acumulada.</p>
+
+<h4>RF007 - Impactos</h4> <p>Seção que exibe métricas e dados visuais sobre o impacto ambiental positivo gerado pelas ações de reciclagem do usuário (ex: CO2 evitado, água economizada).</p>
+
+<h4>RF008 - Calculadora de conversão</h4> <p>Ferramenta utilitária para o usuário simular quanto seus recicláveis valem em pontos, benefícios ou métricas de impacto (ex: 5kg de plástico = X pontos).</p>
+
+<h4>RF009 - Registro de reciclagem</h4> <p>Funcionalidade principal onde o usuário registra a entrega de materiais em um ponto de coleta, especificando tipo e quantidade (peso/volume).</p>
+
+<h4>RF011 - Indicações</h4> <p>Sistema de "Indique um Amigo" ou "Indique um Ponto", permitindo que usuários convidem novos membros ou sugiram novos locais para a plataforma, geralmente em troca de benefícios.</p>
 
 
 <h2> ⚙️ LINGUAGEM E TECNOLOGIA </h2>
@@ -61,8 +70,8 @@ O fluxo é simples:
 
 <h2>📚 BIBLIOTECAS </h2>
 
--
--
+- <h4>Requests</h4> <p> Usada para realizar as requisições para a API. </p>
+- <h4>Rich</h4> <p> Utilizada para melhorar o visual e a formatação das saídas no terminal. </p>
 
 
 
