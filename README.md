@@ -43,7 +43,7 @@ O fluxo é simples:
 
 <h4>RF004 - Login de usuário e ponto</h4> <p>Sistema de autenticação que permite o acesso seguro de usuários (que reciclam) e administradores de pontos (que recebem material) às suas respectivas contas.</p>
 
-<h4>RF005 - Tutorial</h4> <p>Guia inicial (onboarding) apresentado ao usuário no primeiro acesso, explicando o fluxo básico de uso da aplicação.</p>
+<h4>RF005 - Tutorial</h4> <p>Guia apresentado ao usuário, explicando como reciclar de maneira correta cada tipo de lixo.</p>
 
 <h4>RF0010 - Procurar pontos</h4> <p>Ferramenta para exibir todos os pontos para o usuário localizar os pontos de coleta mais próximos de sua localização.</p>
 
@@ -66,13 +66,18 @@ O fluxo é simples:
 
 <h2> ⚙️ LINGUAGEM E TECNOLOGIA </h2>
 
-<h3>PYTHON 3</h3>
+<h3>PYTHON 3.13.7</h3>
 
 <h2>📚 BIBLIOTECAS </h2>
 
 - <h4>Requests</h4> <p> Usada para realizar as requisições para a API. </p>
 - <h4>Rich</h4> <p> Utilizada para melhorar o visual e a formatação das saídas no terminal. </p>
 
+
+----------------------------------------------------
+
+<h4>Para rodar em qualquer máquina:</h4>
+<p>*instalar e importar as bibliotecas, além de baixar o python 3.13.7</p>
 
 
 
