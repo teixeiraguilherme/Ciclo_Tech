@@ -7,7 +7,7 @@ import def_usuario
 import def_ponto
 from rich.console import Console
 from rich.prompt import Prompt
-
+console = Console()
 
 
 while True:

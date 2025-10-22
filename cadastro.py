@@ -62,7 +62,7 @@ def endereco():
         if len(cep_limpo) == 8:
             break
         console.print("Cep inválido, tente novamente.", style="bold red")
-    
+
     rua = Prompt.ask("Rua")
     numero = Prompt.ask("Número da casa")
     bairro = Prompt.ask("Bairro")
@@ -91,30 +91,25 @@ def cadastro_usuario():
             break
 
     while True:
-<<<<<<< HEAD
-        cpf = "".join(filter(str.isdigit, Prompt.ask("\nCPF")))
-=======
         cpf = "".join(filter(str.isdigit, Prompt.ask("CPF: ")))
->>>>>>> 760591b7bb0648ea80ce9d2c34a68e074ccec5d4
         if len(cpf) == 11:
             if cpf_existe(cpf):
                 console.print("❌ CPF já cadastrado. Tente outro.", style="bold red")
                 aguardar(2)
             else:
                 break
-        else:
-            console.print("CPF inválido. Deve conter 11 números.", style="bold red")
+        console.print("CPF inválido. Deve conter 11 números.", style="bold red")
 
-    cidade = Prompt.ask("\nCidade")
+    cidade = Prompt.ask("Cidade")
 
     while True:
-        telefone = "".join(filter(str.isdigit, Prompt.ask("\nTelefone (11 dígitos)")))
+        telefone = "".join(filter(str.isdigit, Prompt.ask("Telefone (11 dígitos)")))
         if len(telefone) == 11:
             break
         console.print("Número inválido, tente novamente.", style="bold red")
 
     while True:
-        email = Prompt.ask("\nEmail")
+        email = Prompt.ask("Email")
         if validar_email(email):
             if email_existe(email):
                 console.print("❌ Email já cadastrado. Tente outro.", style="bold red")
@@ -125,29 +120,21 @@ def cadastro_usuario():
             console.print("Email inválido.", style="bold red")
 
     while True:
-        confirmar_email = Prompt.ask("\nConfirme seu email")
+        confirmar_email = Prompt.ask("Confirme seu email")
         if email == confirmar_email:
             break
         console.print("Emails diferentes, tente novamente.", style="bold red")
 
     while True:
         console.print("Senha deve conter 8+ caracteres, 1 letra e 1 número, sem caracteres especiais.", style="bold cyan")
-<<<<<<< HEAD
-        senha = Prompt.ask("\nCriar senha", password=True)
-=======
         senha = Prompt.ask("Criar senha")
->>>>>>> 760591b7bb0648ea80ce9d2c34a68e074ccec5d4
         resultado = validar_senha(senha)
         if resultado == "Aprovada!":
             break
         console.print(resultado, style="bold red")
 
     while True:
-<<<<<<< HEAD
-        confirmar_senha = Prompt.ask("\nConfirme sua senha", password=True)
-=======
         confirmar_senha = Prompt.ask("Confirme sua senha")
->>>>>>> 760591b7bb0648ea80ce9d2c34a68e074ccec5d4
         if senha == confirmar_senha:
             break
         console.print("Senhas diferentes, tente novamente.", style="bold red")
@@ -272,11 +259,10 @@ def cadastro():
     console.print("2 - Cadastro de ponto", style="bold cyan")
     console.print("0 - Voltar", style="bold cyan")
     escolha = Prompt.ask("Escolha uma opção")
-    
+
     if escolha == "1":
         cadastro_usuario()
     elif escolha == "2":
         cadastro_ponto()
     else:
         return
-
