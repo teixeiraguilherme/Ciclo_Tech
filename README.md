@@ -72,12 +72,12 @@ O fluxo é simples:
 
 - <h4>Requests</h4> <p> Usada para realizar as requisições para a API. </p>
 - <h4>Rich</h4> <p> Utilizada para melhorar o visual e a formatação das saídas no terminal. </p>
-
+- <h4>Json</h4> <p> Usada para armazenar as informações. </p>
 
 ----------------------------------------------------
 
 <h4>Para rodar em qualquer máquina:</h4>
-<p>*instalar e importar as bibliotecas, além de baixar o python 3.13.7</p>
+<p>*instalar e importar as bibliotecas(request e rich), além de baixar o python 3.13.7</p>
 
 
 
