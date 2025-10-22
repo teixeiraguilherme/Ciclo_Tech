@@ -13,5 +13,21 @@
             "estado": "pernambuco",
             "cep": ""
         }
+    },
+    {
+        "nome_ponto": "ponto rec",
+        "cnpj": "00530279000115",
+        "telefone": "81334536578",
+        "email": "artur@gmail.com",
+        "senha": "Art55555",
+        "endereco": {
+            "cep": "52041130",
+            "rua": "ceara",
+            "numero": "148",
+            "bairro": "encruzilhada",
+            "cidade": "recife",
+            "estado": "pernambuco",
+            "pais": "brasil"
+        }
     }
 ]

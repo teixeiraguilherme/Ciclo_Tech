@@ -6,5 +6,13 @@
         "telefone": "81992262729",
         "email": "Guilhermeuser@gmail.com",
         "senha": "Art87960"
+    },
+    {
+        "nome": "Artur",
+        "cpf": "15369566437",
+        "cidade": "recife",
+        "telefone": "81997363535",
+        "email": "arturpmr1801@gmail.com",
+        "senha": "Art09876"
     }
 ]

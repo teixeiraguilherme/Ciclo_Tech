@@ -91,7 +91,7 @@ def cadastro_usuario():
             break
 
     while True:
-        cpf = "".join(filter(str.isdigit, Prompt.ask("CPF")))
+        cpf = "".join(filter(str.isdigit, Prompt.ask("\nCPF")))
         if len(cpf) == 11:
             if cpf_existe(cpf):
                 console.print("❌ CPF já cadastrado. Tente outro.", style="bold red")
@@ -101,16 +101,16 @@ def cadastro_usuario():
         else:
             console.print("CPF inválido. Deve conter 11 números.", style="bold red")
 
-    cidade = Prompt.ask("Cidade")
+    cidade = Prompt.ask("\nCidade")
 
     while True:
-        telefone = "".join(filter(str.isdigit, Prompt.ask("Telefone (11 dígitos)")))
+        telefone = "".join(filter(str.isdigit, Prompt.ask("\nTelefone (11 dígitos)")))
         if len(telefone) == 11:
             break
         console.print("Número inválido, tente novamente.", style="bold red")
 
     while True:
-        email = Prompt.ask("Email")
+        email = Prompt.ask("\nEmail")
         if validar_email(email):
             if email_existe(email):
                 console.print("❌ Email já cadastrado. Tente outro.", style="bold red")
@@ -121,21 +121,21 @@ def cadastro_usuario():
             console.print("Email inválido.", style="bold red")
 
     while True:
-        confirmar_email = Prompt.ask("Confirme seu email")
+        confirmar_email = Prompt.ask("\nConfirme seu email")
         if email == confirmar_email:
             break
         console.print("Emails diferentes, tente novamente.", style="bold red")
 
     while True:
         console.print("Senha deve conter 8+ caracteres, 1 letra e 1 número, sem caracteres especiais.", style="bold cyan")
-        senha = Prompt.ask("Criar senha", password=True)
+        senha = Prompt.ask("\nCriar senha", password=True)
         resultado = validar_senha(senha)
         if resultado == "Aprovada!":
             break
         console.print(resultado, style="bold red")
 
     while True:
-        confirmar_senha = Prompt.ask("Confirme sua senha", password=True)
+        confirmar_senha = Prompt.ask("\nConfirme sua senha", password=True)
         if senha == confirmar_senha:
             break
         console.print("Senhas diferentes, tente novamente.", style="bold red")
