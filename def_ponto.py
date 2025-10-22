@@ -136,3 +136,4 @@ def editar_endereco(usuario_logado):
             print("\n✅ Endereço atualizado com sucesso!")
             aguardar(2)
             return
+        

@@ -11,7 +11,6 @@ console = Console()
 
 def procurar_pontos():
     pontos = carregar_pontos()
-    
 
     print ("\n--- PONTOS DE COLETA CADASTRADOS ---\n")
     for ponto in pontos:
@@ -28,7 +27,7 @@ def procurar_pontos():
         print(f"Telefone: \t{ponto.get('telefone')}")
         print(f"CNPJ: \t\t{ponto.get('cnpj')}\n")
         print("-------------------------------")
-
+    input("\n\nPressione ENTER para voltar ao menu...")
 
 def perfil_usuario(usuario_logado):
     limpar_tela()

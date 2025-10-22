@@ -31,8 +31,8 @@ while True:
                 entrada_usuario = menu_inicial.menu_usuario(usuario_logado)
                 if entrada_usuario == 1:
                     console.print("Chamando a função de procurar pontos de coleta...",style="bold green")
-                    aguardar(1)
                     limpar_tela() 
+                    aguardar(1)
                     def_usuario.procurar_pontos()
                 elif entrada_usuario == 2:
                     #calcular_pontuacao()
