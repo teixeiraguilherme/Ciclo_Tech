@@ -1,7 +1,6 @@
 from utils import limpar_tela
 from rich.console import Console
 from rich.prompt import Prompt
-
 console = Console()
 
 def menu_inicial():

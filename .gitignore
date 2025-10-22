@@ -1,7 +1,5 @@
 __pycache__/
 *.pyc
-
-# Outros arquivos comuns de Python que são ignorados
 .vscode/
 .DS_Store
 venv/

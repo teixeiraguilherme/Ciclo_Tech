@@ -3,10 +3,14 @@ from utils import limpar_tela, aguardar, validar_senha, validar_email
 import login
 import menu_inicial
 import json
+from rich.console import Console
+from rich.prompt import Prompt
+
+console = Console()
+
 
 def procurar_pontos():
     pontos = carregar_pontos()
-    
 
     print ("\n--- PONTOS DE COLETA CADASTRADOS ---\n")
     for ponto in pontos:
@@ -23,11 +27,11 @@ def procurar_pontos():
         print(f"Telefone: \t{ponto.get('telefone')}")
         print(f"CNPJ: \t\t{ponto.get('cnpj')}\n")
         print("-------------------------------")
-
+    input("\n\nPressione ENTER para voltar ao menu...")
 
 def perfil_usuario(usuario_logado):
     limpar_tela()
-    print("--- 👤 MEU PERFIL ---")
+    console.print("--- 👤 MEU PERFIL ---", style = "bold green")
     print(f"Nome: \t\t{usuario_logado.get('nome')}")
     print(f"Email: \t\t{usuario_logado.get('email')}")
     print(f"CPF: \t\t{usuario_logado.get('cpf')}")
@@ -35,10 +39,10 @@ def perfil_usuario(usuario_logado):
     print(f"Cidade: \t{usuario_logado.get('cidade')}")
     aguardar(3) 
 
-    print("\n[1] Editar perfil")
-    print("[2] Excluir conta")
-    print("[3] Redifinir senha")
-    print("[0] Voltar menu anterior")
+    console.print("\n[1] Editar perfil")
+    console.print("[2] Excluir conta")
+    console.print("[3] Redifinir senha")
+    console.print("[0] Voltar menu anterior")
 
     try:
         entrada_perfil = int(input("\nEscolha uma opção: "))
@@ -48,7 +52,7 @@ def perfil_usuario(usuario_logado):
 
 def editar_usuario(usuario_logado):
     limpar_tela()
-    print("--- ✏️ EDITAR PERFIL DO USUÁRIO ---")
+    console.print("--- ✏️ EDITAR PERFIL DO USUÁRIO ---", style="bold green")
     usuarios = carregar_usuarios()
 
     for usuario in usuarios:
@@ -65,7 +69,7 @@ def editar_usuario(usuario_logado):
                     print("Nome muito curto, tente novamente.")
 
             while True:
-                novo_telefone = input(f"Telefone ({usuario['telefone']}): ")
+                novo_telefone = input(f"\nTelefone ({usuario['telefone']}): ")
                 novo_telefone_limpo = "".join(filter(str.isdigit, novo_telefone))
                 if novo_telefone_limpo == "":
                     novo_telefone_limpo = usuario['telefone']
@@ -74,10 +78,10 @@ def editar_usuario(usuario_logado):
                     break
                 else:
                     print("Telefone inválido, tente novamente.")
-            nova_cidade = input(f"Cidade ({usuario['cidade']}): ") or usuario['cidade']
+            nova_cidade = input(f"\nCidade ({usuario['cidade']}): ") or usuario['cidade']
 
             while True:
-                novo_email = input(f"Email ({usuario['email']}): ")
+                novo_email = input(f"\nEmail ({usuario['email']}): ")
                 if novo_email == "":
                     novo_email = usuario['email']
                     break    

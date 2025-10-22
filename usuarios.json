@@ -5,6 +5,7 @@
         "cidade": "Moreno",
         "telefone": "81992262729",
         "email": "Guilhermeuser@gmail.com",
+<<<<<<< HEAD
         "senha": "Art87960"
     },
     {
@@ -14,5 +15,8 @@
         "telefone": "81997363535",
         "email": "arturpmr1801@gmail.com",
         "senha": "Art09876"
+=======
+        "senha": "Gui20006"
+>>>>>>> 760591b7bb0648ea80ce9d2c34a68e074ccec5d4
     }
 ]

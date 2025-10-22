@@ -1,4 +1,8 @@
 from utils import limpar_tela, aguardar
+from rich.console import Console
+from rich.prompt import Prompt
+console = Console()
+
 
 def voltar_tutorial():
     while True:
@@ -17,17 +21,17 @@ def voltar_tutorial():
 def tutorial():
     while True: 
         limpar_tela()
-        print("_________BEM-VINDO AO TUTORIAL DE RECICLAGEM_________")
-        print("\nAQUI VOCÊ VAI APRENDER A RECICLAR TODO E QUALQUER TIPO DE MATERIAL\n")
-        print("      1 - Vidro")
-        print("      2 - Plásticos")
-        print("      3 - Papel e Papelão")
-        print("      4 - Metais")
-        print("      5 - Óleo de Cozinha")
-        print("      6 - Baterias e Pilhas")
-        print("      7 - Lixo Eletrônico")
-        print("      8 - Lixo Orgânico")
-        print("      9 - Voltar Menu")
+        console.print(f"--- 🗑️ BEM-VINDO AO TUTORIAL DE RECICLAGEM ---", style="bold cyan")
+        console.print("\nAQUI VOCÊ VAI APRENDER A RECICLAR TODO E QUALQUER TIPO DE MATERIAL\n", style="bold green")
+        console.print("      1 - Vidro")
+        console.print("      2 - Plásticos")
+        console.print("      3 - Papel e Papelão")
+        console.print("      4 - Metais")
+        console.print("      5 - Óleo de Cozinha")
+        console.print("      6 - Baterias e Pilhas")
+        console.print("      7 - Lixo Eletrônico")
+        console.print("      8 - Lixo Orgânico")
+        console.print("      9 - Voltar Menu")
         
         try:
             number_tutorial = int(input("\nSelecione o material desejado: "))
