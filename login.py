@@ -2,6 +2,7 @@ from cadastro import carregar_usuarios, carregar_pontos, salvar_usuarios, salvar
 from utils import limpar_tela, aguardar, validar_senha, validar_email
 from rich.console import Console
 from rich.prompt import Prompt
+import random
 console = Console()
 
 
@@ -78,6 +79,12 @@ def login():
 
     return None, None  # <<< caso algum loop termine inesperadamente
 
+def verificar_codigo():
+    return str(random.randint(100000, 999999))
+
+random = verificar_codigo()
+
+
 def esqueci_minha_senha():
     limpar_tela()
     console.print("--- 🔑 RECUPERAÇÃO DE SENHA ---", style="bold cyan")
@@ -87,6 +94,15 @@ def esqueci_minha_senha():
         print("\n❌ Formato de email inválido. Tente novamente.")
         aguardar(2)
         return None, None
+    
+    while True:
+        print(f"O seu código de verificação é: {random}\n")
+        verificar_random = str(input("\nDigite o código de verificação: "))
+        if verificar_random != random:
+            print("Tente novamente")
+        else: 
+            break
+            
 
     usuarios = carregar_usuarios()
     for i, usuario in enumerate(usuarios):
