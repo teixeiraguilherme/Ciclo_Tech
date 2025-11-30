@@ -1,17 +1,41 @@
 [
     {
-        "nome_ponto": "Ponto Recife",
-        "cnpj": "01116583000183",
-        "telefone": "",
-        "email": "arturpmr1904@gmail.com",
-        "senha": "Art07890",
+        "nome_ponto": "leixeiro",
+        "email": "Leixeiro@gmail.com",
+        "senha": "Gui20066",
+        "telefone": "81992282828",
         "endereco": {
-            "rua": "ceara",
-            "numero": "148",
-            "bairro": "encruzilhada",
-            "cidade": "recife",
-            "estado": "pernambuco",
-            "cep": ""
-        }
+            "rua": "rua",
+            "numero": "137",
+            "bairro": "cohab",
+            "cidade": "moreno"
+        },
+        "cnpj": "27034344000178"
+    },
+    {
+        "nome_ponto": "guilherme",
+        "email": "lixeiro@gmail.com",
+        "senha": "Gui20066",
+        "telefone": "81928282828",
+        "endereco": {
+            "rua": "DESEMBARGADOR AGAMENON DUARTE LIMA",
+            "numero": "137",
+            "bairro": "COHAB",
+            "cidade": "MORENO"
+        },
+        "cnpj": "27034344000178"
+    },
+    {
+        "nome_ponto": "Lilian",
+        "email": "lixo@gmail.com",
+        "senha": "Gui20066",
+        "telefone": "81922526777",
+        "endereco": {
+            "rua": "MASSAMBARA",
+            "numero": "134",
+            "bairro": "ZONA RURAL",
+            "cidade": "moreno"
+        },
+        "cnpj": "59326738000196"
     }
 ]

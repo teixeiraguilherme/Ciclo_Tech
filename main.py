@@ -1,152 +1,149 @@
-import menu_inicial
-from utils import limpar_tela, aguardar
-import tutorial
-import login
-import cadastro
-import def_usuario
-import def_ponto
+from sistema import SistemaCiclotech
+from tutorial import tutorial
+import utils
 from rich.console import Console
-from rich.prompt import Prompt
-console = Console()
+from rich.panel import Panel
+from rich.table import Table
+from rich.align import Align
+from rich import box
 
+console = Console()
+app = SistemaCiclotech()
+
+def cabecalho():
+    utils.limpar_tela()
+    console.print(Panel(Align.center("[bold green]♻️  CICLOTECH  ♻️[/]"), border_style="green"))
+
+
+def pedir_opcao():
+    while True:
+        try: return int(input("\nOpção: "))
+        except: console.print("❌ Digite um número.", style="red")
+
+'''MENUS DE NAVEGAÇÃO'''
+
+def menu_usuario_logado(user):
+    while True:
+        cabecalho()
+        console.print(f"Bem-vindo, {user.nome} | 💎 {user.pontos}", style="green", justify="center")
+        
+        t = Table(show_header=False, box=None)
+        t.add_row("[1] Ranking", "[2] Calculadora")
+        t.add_row("[3] Impactos", "[4] Perfil")
+        t.add_row("[5] Encontrar Pontos", "[0] Sair","")
+        console.print(Align.center(t))
+        
+        op = pedir_opcao()
+        if op == 0: break
+        elif op == 1:
+            cabecalho()
+            for i, u in enumerate(app.gerar_ranking()):
+                print(f"{i+1}. {u.nome} - {u.pontos} pts")
+            input("\nVoltar...")
+        elif op == 2:
+            cabecalho()
+            app.interface_calculadora()
+        elif op == 3:
+            cabecalho()
+            app.interface_impactos(user)
+        elif op == 4:
+            while True:
+                cabecalho()
+                t = Table(title=f"Perfil: {user.nome}", box=box.ROUNDED, show_header=False)
+                t.add_column("C", style="cyan"); t.add_column("V", style="white")
+                t.add_row("Email", user.email); t.add_row("Tel", user.telefone)
+                t.add_row("Cidade", user.cidade); t.add_row("CPF", user.cpf)
+                console.print(Align.center(t))
+                
+                console.print("\n[1] Editar  [2] Trocar Senha  [3] Voltar", justify="center")
+                sub_op = pedir_opcao()
+                
+                if sub_op == 1:
+                    user.editar_perfil_interativo(app)
+                    
+                elif sub_op == 2:
+                    app.interface_trocar_senha_logado(user)
+                elif sub_op == 3: break
+
+        elif op == 5:
+            cabecalho()
+            app.interface_encontrar_pontos()
+
+
+def menu_ponto_logado(ponto):
+    while True:
+        cabecalho()
+        console.print(f"Painel: {ponto.nome}", style="magenta", justify="center")
+        t = Table(show_header=False, box=None)
+        t.add_row("[1] Registrar Reciclagem", "[2] Perfil/Dados")
+        t.add_row("[0] Sair", "")
+        console.print(Align.center(t))
+        
+        op = pedir_opcao()
+        if op == 0: break
+        elif op == 1:
+            cabecalho()
+            app.interface_registrar_reciclagem()
+        elif op == 2:
+            while True:
+                cabecalho()
+                t = Table(title=f"Perfil: {ponto.nome}", box=box.ROUNDED, show_header=False)
+                t.add_column("C", style="magenta"); t.add_column("V", style="white")
+                t.add_row("Email", ponto.email); t.add_row("CNPJ", ponto.cnpj)
+                t.add_row("Tel", ponto.telefone)
+                console.print(Align.center(t))
+                
+                console.print("\n[1] Editar  [2] Trocar Senha  [3] Voltar")
+                sub_op = pedir_opcao()
+                
+                if sub_op == 1:
+                    ponto.editar_perfil_interativo(app)
+                    
+                elif sub_op == 2:
+                    app.interface_trocar_senha_logado(ponto)
+                elif sub_op == 3: break
+
+'''LOOP PRINCIPAL'''
 
 while True:
-    entrada = menu_inicial.menu_inicial()
-    if entrada == 1: 
-        limpar_tela()
-        console.print("Chamando a função de tutorial..." , style="bold green")
-        aguardar(1)
-        tutorial.tutorial()
+    utils.limpar_tela()
+    cabecalho()
+    menu = Table(show_header=False, box=None, padding=(1, 4))
     
-    elif entrada == 2:
-        limpar_tela()
-        aguardar(1)
-        console.print("Chamando a função de cadastro...",style="bold green"  )
-        cadastro.cadastro()
+    menu.add_column(justify="right") 
+    menu.add_column(justify="left")
+    menu.add_row("[bold cyan][1][/] 📖 Tutorial", "[bold cyan][2][/] 📝 Cadastro"
+                 ,"[bold cyan][3][/] 🔐 Login",  "[bold cyan][0][/] 🚪 Sair""")
+
+    console.print(Align.center(menu))
+    print("\n")
     
-    elif entrada == 3:
-        tipo_usuario, usuario_logado = login.login() 
-        if tipo_usuario == "usuario":
-            while True:
-                entrada_usuario = menu_inicial.menu_usuario(usuario_logado)
-                if entrada_usuario == 1:
-                    console.print("Chamando a função de procurar pontos de coleta...",style="bold green")
-                    limpar_tela() 
-                    aguardar(1)
-                    def_usuario.procurar_pontos()
-                elif entrada_usuario == 2:
-                    #calcular_pontuacao()
-                    console.print("Chamando a função de calcular pontuação...",style="bold green")
-                elif entrada_usuario == 3:  
-                    #impactos()
-                    console.print("Chamando a função de impactos...",style="bold green")
-                elif entrada_usuario == 4:
-                    #indicacoes()
-                    console.print("Chamando a função de indicações...",style="bold green")
-                elif entrada_usuario == 5:
-                    tutorial.tutorial()
-                elif entrada_usuario == 6:
-                    console.print("Chamando a função de perfil do usuário...",style="bold green")
-                    aguardar(1)
-                    limpar_tela()
-                    entrada_perfil = def_usuario.perfil_usuario(usuario_logado)
-                    if entrada_perfil == 1:
-                        console.print("Chamando a função de editar perfil...",style="bold green")
-                        def_usuario.editar_usuario(usuario_logado)
-                    elif entrada_perfil == 2:
-                        console.print("Chamando a função de excluir conta...",style="bold green")
-                        confirmacao=def_usuario.excluir_usuario(usuario_logado)
-                        if confirmacao == 1:
-                            usuarios = cadastro.carregar_usuarios()
-                            usuarios = [usuario for usuario in usuarios if usuario['email'] != usuario_logado['email']]
-                            cadastro.salvar_usuarios(usuarios)
-                            console.print("\n Conta excluída com sucesso.", style="bold red")
-                            menu_inicial.menu_inicial()
-                            aguardar(2)
-                        else:
-                            console.print("\n❌ Ação cancelada. Sua conta não foi excluída.",style="bold red")
-                            aguardar(2)
-                    elif entrada_perfil == 3:
-                        console.print("Chamando a função de redifinir senha...",style="bold green")
-                        confirmacao = int(input("Tem certeza que deseja redefinir sua senha?[1] Sim [0] Não: "))
-                        if confirmacao == 1:
-                            login.esqueci_minha_senha()
-                        else:
-                            print("Retornando ao menu anterior.")
-                            pass
-                    elif entrada_perfil == 0:
-                        print("Voltando ao menu anterior...")
-                        aguardar(1)
-                        limpar_tela()
-                        continue
-                    else:
-                        print("\nDigite um número válido!\n")
-                elif entrada_usuario == 0:
-                    print("Saindo da conta...")
-                    aguardar(2) 
-                    break
-                else: 
-                    print("\nDigite um número válido!\n")
+    op = pedir_opcao()
+    
+    if op == 1: 
+        tutorial()
+        
+    elif op == 2:
+        utils.limpar_tela()
+        console.print("--- CADASTRO ---", style="bold green")
+        console.print("[1] Usuário Comum (Reciclador)")
+        console.print("[2] Ponto de Coleta (Empresa)")
+        console.print("[Enter] para voltar...")
+        try:
+            op_cad = int(input("\nTipo de conta: "))
+            if op_cad == 1: app.interface_cadastro_usuario()
+            elif op_cad == 2: app.interface_cadastro_ponto()
+        except ValueError: pass
+        
+    elif op == 3:
+        tipo, obj = app.interface_login()
+        
+        if obj:
+            if tipo == 'usuario': 
+                menu_usuario_logado(obj)
+            else: 
+                menu_ponto_logado(obj)
 
-        elif tipo_usuario == "ponto":
-            while True:
-                entrada_ponto = menu_inicial.menu_ponto(usuario_logado)
-                if entrada_ponto == 1:
-                    #cadastrar_coletas()
-                    console.print("Chamando a função de cadastrar coletas...",style="bold green")
-
-                elif entrada_ponto == 2:
-                    #impactos_ponto()
-                    console.print("Chamando a função de impactos...",style="bold green")
-
-                elif entrada_ponto == 3:
-                    console.print("Chamando a função de perfil do ponto...", style="bold green")
-                    aguardar(1)
-                    limpar_tela()
-                    entrada_perfil = def_ponto.perfil_ponto(usuario_logado)
-                    if entrada_perfil == 1:
-                        console.print("Chamando a função de editar perfil...", style="bold green")
-                        def_ponto.editar_ponto(usuario_logado)
-                    elif entrada_perfil == 3:
-                        console.print("Chamando a função de excluir conta..."  , style="bold green")
-                        confirmacao=def_ponto.excluir_ponto(usuario_logado)
-                        if confirmacao == 1:
-                            pontos = cadastro.carregar_pontos()
-                            pontos = [ponto for ponto in pontos if ponto['email'] != usuario_logado['email']]
-                            cadastro.salvar_pontos(pontos)
-                            console.print("\n Conta excluída com sucesso.", style="bold red")
-                            menu_inicial.menu_inicial()
-                            aguardar(2)
-                        else:
-                            console.print("\n❌ Ação cancelada. Sua conta não foi excluída." , style="bold red")
-                            aguardar(2)
-                    elif entrada_perfil == 4:
-                        console.print("Chamando a função de redifinir senha...", style="bold green")
-                        confirmacao = int(input("Tem certeza que deseja redefinir sua senha?[1] Sim [0] Não: "))
-                        if confirmacao == 1:
-                            login.esqueci_minha_senha()
-                        else:
-                            console.print("Retornando ao menu anterior.",   style="bold green")
-                            pass
-            
-                    elif entrada_perfil == 2:
-                        console.print("Chamando a função de editar endereço...", style="bold green")
-                        def_ponto.editar_endereco(usuario_logado)
-                    elif entrada_perfil == 0:
-                        console.print("Voltando ao menu anterior...", style="bold green")
-                        aguardar(1)
-                        limpar_tela()
-                        continue
-
-                elif entrada_ponto == 0:
-                    break
-                else:
-                    print("\nDigite um número válido!\n")   
-
-    elif entrada == 0:
-        print("Menu fechado.")
-        break 
-
-    else:
-        print("\nDigite um número válido!\n")
-        aguardar(2)
+    elif op == 0: 
+        console.print("Saindo... Até logo! 👋", style="green")
+        break
