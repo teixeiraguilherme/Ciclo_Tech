@@ -57,33 +57,67 @@ O fluxo é simples:
 
 <h4>RF007 - Impactos</h4> <p>Seção que exibe métricas e dados visuais sobre o impacto ambiental positivo gerado pelas ações de reciclagem do usuário (ex: CO2 evitado, água economizada).</p>
 
-<h4>RF008 - Calculadora de conversão</h4> <p>Ferramenta utilitária para o usuário simular quanto seus recicláveis valem em pontos, benefícios ou métricas de impacto (ex: 5kg de plástico = X pontos).</p>
+<h4>RF008 - Calculadora de conversão</h4> <p>Ferramenta utilitária para o usuário simular quanto seus recicláveis valem em pontos ou benefícios (ex: 5kg de plástico = X pontos).</p>
 
-<h4>RF009 - Registro de reciclagem</h4> <p>Funcionalidade principal onde o usuário registra a entrega de materiais em um ponto de coleta, especificando tipo e quantidade (peso/volume).</p>
+<h4>RF009 - Registro de reciclagem</h4> <p>Funcionalidade principal onde o ponto registra a entrega de materiais em um ponto de coleta, especificando tipo e quantidade (peso/volume).</p>
 
-<h4>RF011 - Indicações</h4> <p>Sistema de "Indique um Amigo" ou "Indique um Ponto", permitindo que usuários convidem novos membros ou sugiram novos locais para a plataforma, geralmente em troca de benefícios.</p>
+<h4>RF011 - Indicação</h4> <p>Funcionalidade informativa que indica ao usuário como converter seus pontos acumulados em benefícios (Vale Transporte). O sistema direciona o usuário para o local de troca e lista os documentos necessários para o resgate.</p>
 
 
 <h2> ⚙️ LINGUAGEM E TECNOLOGIA </h2>
 
-<h3>PYTHON 3.13.7</h3>
+<h4>PYTHON 3.13.7</h4>
 
-<h2>📚 BIBLIOTECAS </h2>
+<br><h3>🧱 PARADIGMA E ESTRUTURA </h3>
 
-- <h4>Requests</h4> <p> Usada para realizar as requisições para a API. </p>
-- <h4>Rich</h4> <p> Utilizada para melhorar o visual e a formatação das saídas no terminal. </p>
-- <h4>Json</h4> <p> Usada para armazenar as informações. </p>
-- <h4>Random</h4> <p> Usada para gerar código de autenticação. </p>
+- **Programação Orientada a Objetos (POO):** A base do projeto. O sistema utiliza Classes para representar Entidades (como `Usuario` e `PontoColeta`) que herdam características de uma classe mãe (`Conta`), garantindo encapsulamento e reutilização de código.
 
+<br><h3>📚 BIBLIOTECAS </h3>
+
+- 🎨 **Rich**: Responsável por toda a interface visual (CLI), criando painéis, tabelas, barras de progresso e estilização colorida no terminal.
+- 🌐 **Requests:** Utilizada para consumir a BrasilAPI, permitindo o preenchimento automático de dados de empresas via CNPJ.
+- 📧 **SMTPLib & Email**: Implementação do sistema de envio de e-mails reais para recuperação de senha e autenticação de dois fatores (2FA).
+- 🔐 **Python-Dotenv**: Gerenciamento de variáveis de ambiente (`.env`) para proteger credenciais sensíveis (senha do e-mail empresarial).
+- 💾 **JSON**: Utilizado como banco de dados local para persistência das informações de usuários, pontos de coleta e resíduos.
+- 🎲 **Random**: Geração de códigos aleatórios de segurança para a validação de e-mail.
+- 📂 **Pathlib & OS**: Manipulação segura de caminhos de arquivos, garantindo compatibilidade entre Windows e Linux.
+  
+<br><h3>💾 PERSISTÊNCIA DE DADOS </h3>
+
+- **JSON (JavaScript Object Notation):** Utilizado como banco de dados local "serverless". O sistema lê e grava arquivos `.json` para manter o histórico de usuários, pontos de coleta e resíduos, permitindo que os dados persistam mesmo após fechar o programa.
+  
+----------------------------------------------------
 <h3> 1.1 RELEASE </h3>
-<p> Melhorias na camada de segurança de redifinição de senha </p>
+
+- **CAMADA DE SEGURANÇA -** Melhorias na  de redifinição de senha, acréscimo de verificação em duas etapas por email.  </p>
+- **BUG 001 -** While inútil para sair da tela de tutorial, corrigido por pressione enter. </p>
 
 ----------------------------------------------------
 
-<h4>Para rodar em qualquer máquina:</h4>
-<p>*instalar e importar as bibliotecas(request e rich), além de baixar o python 3.13.7</p>
+## ▶️ Como Executar
+
+1. **Requisitos**:
+   - Python 3.10+
+   - Biblioteca [requests](https://pypi.org/project/requests/)
+   - Biblioteca [rich](https://pypi.org/project/rich/)
+   - Biblioteca [dotenv](https://www.dotenv.org/)
+2. **Instalação das dependências**:
+   ```bash
+   pip install requests
+   ```
+   ```bash
+   pip install rich
+   ```
+   ```bash
+   pip install python-dotenv
+   ```
 
 
+3. **Executar o jogo**:
+   ```bash
+   python main.py
+   ```
+---
 
 
 
