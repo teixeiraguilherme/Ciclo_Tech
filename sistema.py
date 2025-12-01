@@ -228,23 +228,47 @@ class SistemaCiclotech:
 
 
     def interface_esqueci_senha(self):
-        console.print(Panel("[yellow]RECUPERAÇÃO DE SENHA[/]", border_style="yellow"))
+        utils.limpar_tela()
+        console.print(Panel("[yellow]RECUPERAÇÃO DE SENHA (2FA)[/]", border_style="yellow"))
+        
         email = Prompt.ask("Digite o email da conta")
+        
         conta = self.buscar_conta_por_email(email)
         
         if not conta:
             console.print("❌ Email não encontrado no sistema.", style="red")
             utils.aguardar(2); return
 
-        cod = utils.gerar_codigo_verificacao()
-        console.print(f"\n[italic]Simulação de envio de email...[/]")
-        console.print(f"Código de segurança: [bold cyan inverse] {cod} [/]")
+        # 2. Identifica o nome correto (Usuario tem 'nome', Ponto tem 'nome_ponto')
+        # O getattr tenta pegar 'nome', se não achar pega 'nome_ponto', se não achar usa 'Usuário'
+        nome_real = getattr(conta, 'nome', getattr(conta, 'nome_ponto', 'Usuário'))
+
+        # 3. Gera o código (APENAS UMA VEZ)
+        cod_seguranca = utils.gerar_codigo_verificacao()
         
-        if input("\nDigite o código recebido: ") != str(cod):
-            console.print("❌ Código inválido.", style="red")
+        utils.barra_progresso("Enviando código para seu email")
+
+        # 4. Tenta enviar o email real
+        enviou_email = utils.enviar_email_verificacao(conta.email, nome_real, cod_seguranca)
+
+        # 5. Feedback para o usuário
+        if enviou_email:
+            console.print(f"\n✅ Código enviado para [cyan]{conta.email}[/]!", style="bold green")
+            console.print("[italic dim]Verifique sua caixa de entrada ou spam.[/]")
+        else:
+            # Fallback: Se o email falhar (internet ruim), mostra na tela para teste (Modo Dev)
+            console.print("\n[bold red]⚠️ Falha no envio do email (Modo Offline Ativado)[/]")
+            console.print(f"Código de segurança (Simulação): [bold cyan inverse] {cod_seguranca} [/]")
+
+        # 6. Validação
+        entrada = input("\nDigite o código recebido: ")
+        
+        if entrada != str(cod_seguranca):
+            console.print("❌ Código inválido ou expirado.", style="bold red")
             utils.aguardar(2); return
             
-        console.print("\n[bold]Crie sua nova senha:[/]")
+        # 7. Troca de Senha
+        console.print("\n[bold]Código aceito! Crie sua nova senha:[/]")
         nova_senha = utils.solicitar_senha_segura()
         
         utils.barra_progresso("Atualizando Credenciais")
@@ -252,12 +276,37 @@ class SistemaCiclotech:
         conta.definir_nova_senha(nova_senha)
         self.salvar_dados()
         
-        console.print("✅ Senha redefinida! Faça login agora.", style="green")
+        console.print("✅ Senha redefinida com sucesso! Faça login agora.", style="green")
         utils.aguardar(3)
 
 #======================
 #FUNCIONALIDADES USER
 #======================
+
+    def interface_editar_perfil_usuario(self, usuario):
+        utils.limpar_tela()
+        console.print(Panel(f"[bold yellow]EDITAR PERFIL: {usuario.nome}[/]"))
+        console.print("[italic dim]Pressione Enter para manter o valor atual.[/]\n")
+        
+        novo_nome = utils.solicitar_nome(usuario.nome)
+        novo_email = utils.solicitar_email_cadastro(self, usuario.email) 
+        novo_tel = utils.solicitar_telefone(usuario.telefone)
+        novo_cpf = utils.solicitar_cpf(self, usuario.cpf)
+        
+        nova_cid = Prompt.ask(f"Cidade", default=usuario.cidade)
+
+        if utils.confirmar_acao("Salvar alterações?"):
+            utils.barra_progresso("Atualizando")
+            
+            usuario.atualizar_dados(novo_nome, novo_email, novo_tel, novo_cpf, nova_cid)
+            
+            self.salvar_dados()
+            console.print("✅ Dados atualizados com sucesso!", style="green")
+        else:
+            console.print("❌ Edição cancelada.", style="red")
+        
+        utils.aguardar(2)
+
 
     def interface_impactos(self, usuario_logado):
         utils.limpar_tela()
@@ -494,6 +543,7 @@ class SistemaCiclotech:
             tabela.add_column("Pos", justify="center", style="bold white", width=5)
             tabela.add_column("Nome", style="green")
             tabela.add_column("Cidade", style="cyan")
+            tabela.add_column("Email", style="cyan")
             tabela.add_column("Pontos", justify="right", style="bold yellow")
 
             for i, user in enumerate(lista_filtrada, start=1):
@@ -506,8 +556,9 @@ class SistemaCiclotech:
 
                 tabela.add_row(
                     medalha,
-                    user.nome + (" (Você)" if user and user.email == user.email else ""),
+                    user.nome,
                     user.cidade,
+                    user.email,
                     f"{user.pontos:.1f}",
                     style=estilo_linha
                 )
@@ -565,7 +616,7 @@ class SistemaCiclotech:
                 return
             
             if op == 1:
-                user.editar_perfil_interativo(self)
+                self.interface_editar_perfil_usuario(user)
                 
             elif op == 2:
                 self.interface_trocar_senha_logado(user)
@@ -620,6 +671,48 @@ class SistemaCiclotech:
         utils.aguardar(4)
 
 
+    def interface_editar_perfil_ponto(self, ponto):
+        utils.limpar_tela()
+        console.print(Panel(f"[bold magenta]EDITAR PONTO: {ponto.nome_ponto}[/]"))
+        console.print("[1] Editar Dados de Contato")
+        console.print("[2] Editar Endereço")
+        console.print("[0] Voltar")
+
+        try:
+            op = int(input("\nOpção: "))
+        except ValueError:
+            return
+
+        if op == 1:
+            console.print("\n[yellow]--- DADOS DE CONTATO (Enter para manter) ---[/]")
+            novo_nome = utils.solicitar_nome(ponto.nome_ponto)
+            novo_email = utils.solicitar_email_cadastro(self, ponto.email)
+            novo_tel = utils.solicitar_telefone(ponto.telefone)
+            
+            if utils.confirmar_acao("Salvar contato?"):
+                ponto.atualizar_dados(novo_nome, novo_email, novo_tel)
+                self.salvar_dados()
+                console.print("✅ Contato atualizado!", style="green")
+
+        elif op == 2:
+            console.print("\n[yellow]--- ENDEREÇO (Enter para manter) ---[/]")
+            e = ponto.endereco if isinstance(ponto.endereco, dict) else {}
+            
+            rua = Prompt.ask("Rua", default=e.get('rua', ''))
+            num = Prompt.ask("Num", default=e.get('numero', ''))
+            bairro = Prompt.ask("Bairro", default=e.get('bairro', ''))
+            cidade = Prompt.ask("Cidade", default=e.get('cidade', ''))
+            
+            if utils.confirmar_acao("Salvar novo endereço?"):
+                novo_end = {"rua": rua, "numero": num, "bairro": bairro, "cidade": cidade}
+                
+                ponto.atualizar_dados(ponto.nome_ponto, ponto.email, ponto.telefone, endereco=novo_end)
+                self.salvar_dados()
+                console.print("✅ Endereço atualizado!", style="green")
+        
+        utils.aguardar(2)
+
+
     def interface_perfil_ponto(self, ponto):
         while True:
             utils.limpar_tela()
@@ -654,7 +747,7 @@ class SistemaCiclotech:
                 return
             
             if op == 1:
-                ponto.editar_perfil_interativo(self)
+                self.interface_editar_perfil_ponto(ponto)
                 
             elif op == 2:
                 self.interface_trocar_senha_logado(ponto)

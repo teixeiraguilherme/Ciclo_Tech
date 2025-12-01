@@ -5,9 +5,20 @@ import random
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.progress import track
+from email.message import EmailMessage
+import smtplib
+from dotenv import load_dotenv
+from pathlib import Path
 
 console = Console()
 aguardar = time.sleep
+
+
+''' ESCONDER '''
+
+pasta_atual = Path(__file__).parent 
+caminho_env = pasta_atual / '.env'
+load_dotenv(dotenv_path=caminho_env)
 
 ''' FUNÇÕES DE APOIO VISUAL '''
 
@@ -44,7 +55,39 @@ def confirmar_acao(mensagem):
 
 
 def gerar_codigo_verificacao():
-    return random.randint(1000, 9999)
+    return random.randint(100000, 999999)
+
+
+def enviar_email_verificacao(destinatario, nome_usuario, codigo):
+    
+    remetente = os.getenv("EMAIL_REMETENTE")
+    senha_app = os.getenv("SENHA_EMAIL") 
+
+    msg = EmailMessage()
+    msg['From'] = remetente
+    msg['To'] = destinatario
+    msg['Subject'] = "Seu Código de Verificação - CicloTech"
+
+    corpo = f"""
+    Olá, {nome_usuario}!
+    
+    Bem-Vindo a CicloTech!, Recebemos uma solicitação de alteração de senha.
+    Seu código de verificação é:
+    
+    ==> {codigo} <==
+    
+    Se não foi você, ignore este e-mail.
+    """
+    msg.set_content(corpo)
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            smtp.login(remetente, senha_app)
+            smtp.send_message(msg)
+        return True
+    except Exception as e:
+        print(f"\n[Erro ao enviar email: {e}]")
+        return False
 
 
 def limpar_apenas_numeros(texto):
@@ -225,4 +268,3 @@ def solicitar_email_cadastro(sistema, atual=""):
             continue 
             
         return email
-

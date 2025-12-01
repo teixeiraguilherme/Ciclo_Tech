@@ -33,7 +33,7 @@ def menu_usuario_logado(user):
         t.add_row("[1] Ranking", "[2] Calculadora")
         t.add_row("[3] Impactos", "[4] Perfil")
         t.add_row("[5] Encontrar Pontos", "[6] Indicações")
-        t.add_row("[0] Sair""")
+        t.add_row("[7] Tutorial", "[0] Sair""")
         console.print(Align.center(t))
         
         op = pedir_opcao()
@@ -56,6 +56,9 @@ def menu_usuario_logado(user):
         elif op == 6:
             cabecalho()
             app.interface_indicacao()
+        elif op == 7:
+            cabecalho()
+            tutorial()
         else:
             console.print("❌ Opção inválida.", style="red")
             utils.aguardar(2)
@@ -67,7 +70,8 @@ def menu_ponto_logado(ponto):
         console.print(f"Painel: {ponto.nome}", style="magenta", justify="center")
         t = Table(show_header=False, box=None)
         t.add_row("[1] Registrar Reciclagem", "[2] Perfil/Dados")
-        t.add_row("[0] Sair", "")
+        t.add_row("[3] Tutorial", "[4] Indicações")
+        t.add_row("[0] Sair""")
         console.print(Align.center(t))
         
         op = pedir_opcao()
@@ -78,6 +82,12 @@ def menu_ponto_logado(ponto):
         elif op == 2:
             cabecalho()
             app.interface_perfil_ponto(ponto)
+        elif op == 3:
+            cabecalho()
+            tutorial()
+        elif op == 4:
+            cabecalho()
+            app.interface_indicacao()
         else:
             console.print("❌ Opção inválida.", style="red")
             utils.aguardar(2)
