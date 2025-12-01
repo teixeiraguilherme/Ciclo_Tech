@@ -4,6 +4,3 @@ __pycache__/
 .DS_Store
 venv/
 .env
-pontos.json
-usuarios.json
-residuos.json

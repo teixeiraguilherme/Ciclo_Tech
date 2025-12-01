@@ -5,6 +5,7 @@ from rich.console import Console
 from rich.prompt import Prompt
 from rich.panel import Panel
 from rich.table import Table
+from rich import box
 from rich.align import Align
 
 console = Console()
@@ -117,6 +118,9 @@ class SistemaCiclotech:
     
     '''MÉTODOS DE INTERFACE (FRONTEND) - CHAMADOS PELO MAIN''' 
    
+#======================
+#FUNCIONALIDADES BÁSICAS
+#======================
 
     def interface_login(self):
         while True:
@@ -126,7 +130,7 @@ class SistemaCiclotech:
             console.print("\n[bold]Escolha uma opção:[/]")
             console.print("[1] 👤 Entrar na minha conta")
             console.print("[2] 🔑 Esqueci minha senha")
-            console.print("[Enter] para voltar...")
+            console.print("\nPressione Enter para voltar...")
             
             opcao = input("\nOpção: ").strip()
             
@@ -149,8 +153,9 @@ class SistemaCiclotech:
 
             elif opcao == "2":
                 self.interface_esqueci_senha()
-                
             
+            elif opcao == "":
+                return
             else:
                 console.print("❌ Opção inválida.", style="red")
                 utils.aguardar(1)
@@ -204,52 +209,6 @@ class SistemaCiclotech:
         utils.aguardar(2)
 
 
-    def interface_registrar_reciclagem(self):
-        utils.limpar_tela()
-        console.print("\n--- Materiais Disponíveis ---", style="bold yellow")
-        for i, r in enumerate(self.residuos): 
-            console.print(f"[{i}] {r.nome}")
-        console.print("---------------------------")
-        
-        email = input("Email do Cliente: ")
-        
-
-        try:
-            mat_input = input("Número do Material: ")
-            mat_num = int(mat_input)
-
-            if mat_num < 0 or mat_num >= len(self.residuos):
-                raise ValueError
-        except ValueError:
-            console.print("❌ Material inválido! Escolha o número da lista.", style="red")
-            utils.aguardar(2)
-            return 
-
-        
-        peso_final = 0.0
-        while True:
-            
-            peso_str = input("Peso (kg): ")
-            try:
-                peso_final = float(peso_str.replace(',', '.'))
-                
-                if peso_final <= 0:
-                    console.print("❌ O peso deve ser maior que zero.", style="red")
-                    continue
-                break 
-            except ValueError:
-                console.print("❌ Peso inválido! Digite apenas números.", style="red")
-
-       
-        try:
-            ok, msg = self.processar_reciclagem(email, mat_num, peso_final)
-            console.print(msg, style="green" if ok else "red")
-        except Exception as e:
-            console.print(f"❌ Erro interno: {e}", style="bold red")
-        
-        utils.aguardar(4)
-
-
     def interface_esqueci_senha(self):
         console.print("[yellow]RECUPERAÇÃO DE SENHA[/]", justify="center")
         email = Prompt.ask("Email da conta")
@@ -268,6 +227,27 @@ class SistemaCiclotech:
         self.redefinir_senha(email, nova)
         console.print("✅ Senha redefinida!", style="green"); utils.aguardar(2)
 
+
+    def interface_trocar_senha_logado(self, usuario):
+        console.print("\n[bold yellow]ALTERAR SENHA[/]")
+        atual = Prompt.ask("Digite sua senha atual", password=True)
+        
+        if atual != usuario.senha:
+            console.print("❌ Senha atual incorreta!", style="bold red")
+            utils.aguardar(2); return
+
+        console.print("Digite a nova senha:")
+        nova = utils.solicitar_senha_segura()
+        
+        if utils.confirmar_acao("Tem certeza?"):
+            usuario.senha = nova
+            self.salvar_dados()
+            console.print("✅ Senha alterada!", style="bold green")
+        utils.aguardar(2)
+
+#======================
+#FUNCIONALIDADES USER
+#======================
 
     def interface_impactos(self, usuario_logado):
         utils.limpar_tela()
@@ -329,8 +309,10 @@ class SistemaCiclotech:
         console.print("--- 🧮 CALCULADORA CICLOTECH ---", style="bold cyan")
         
         console.print("\nO que você deseja simular?", style="yellow")
-        console.print("[1] ♻️ PONTOS")
+        console.print("[1] ♻️  PONTOS")
         console.print("[2] 💰 CRÉDITOS (R$)")
+        console.print("\nPressione Enter para voltar...")
+
         
         try:
             modo = int(input("\nOpção: "))
@@ -400,24 +382,6 @@ class SistemaCiclotech:
         input("\nPressione Enter para voltar...")
     
 
-    def interface_trocar_senha_logado(self, usuario):
-        console.print("\n[bold yellow]ALTERAR SENHA[/]")
-        atual = Prompt.ask("Digite sua senha atual", password=True)
-        
-        if atual != usuario.senha:
-            console.print("❌ Senha atual incorreta!", style="bold red")
-            utils.aguardar(2); return
-
-        console.print("Digite a nova senha:")
-        nova = utils.solicitar_senha_segura()
-        
-        if utils.confirmar_acao("Tem certeza?"):
-            usuario.senha = nova
-            self.salvar_dados()
-            console.print("✅ Senha alterada!", style="bold green")
-        utils.aguardar(2)
-
-
     def interface_encontrar_pontos(self):
         utils.limpar_tela()
         console.print("--- 📍 PONTOS DE COLETA DISPONÍVEIS ---", style="bold green", justify="center")
@@ -458,3 +422,229 @@ class SistemaCiclotech:
 
         console.print(tabela)
         input("\nPressione Enter para voltar...")
+    
+
+    def interface_ranking(self, user=None):
+        while True:
+            utils.limpar_tela()
+            console.print(Panel(Align.center("[bold yellow]🏆 RANKING DE RECICLADORES 🏆[/]"), border_style="yellow"))
+            
+            console.print("\nSelecione o filtro:")
+            console.print("[1] 🌎 Geral (Nacional)")
+            console.print("[2] 🏙️  Por Cidade")
+            console.print("\nPressione Enter para voltar...")
+            
+            try:
+                op = int(input("\nOpção: "))
+            except ValueError:
+                return
+
+            if op == 0:
+                break
+            
+            lista_filtrada = []
+            titulo_ranking = ""
+
+            if op == 1:
+                titulo_ranking = "RANKING GERAL"
+                lista_filtrada = self.usuarios[:] 
+            
+            elif op == 2:
+                cidade_busca = ""
+                if user and user.cidade:
+                    console.print(f"\nSua cidade é [cyan]{user.cidade}[/]. Deseja filtrar por ela?", style="bold")
+                    if utils.confirmar_acao("Filtrar por esta cidade?"):
+                        cidade_busca = user.cidade
+                
+                if not cidade_busca:
+                    cidade_busca = Prompt.ask("Digite o nome da cidade para filtrar").strip()
+                
+                titulo_ranking = f"RANKING: {cidade_busca.upper()}"
+                lista_filtrada = [u for u in self.usuarios if u.cidade.lower() == cidade_busca.lower()]
+            
+            else:
+                console.print("❌ Opção inválida.", style="red")
+                utils.aguardar(1)
+                continue
+
+            lista_filtrada.sort(key=lambda x: x.pontos, reverse=True)
+
+            utils.limpar_tela()
+            console.print(Panel(Align.center(f"[bold yellow]🏆 {titulo_ranking} 🏆[/]"), border_style="yellow"))
+
+            if not lista_filtrada:
+                console.print(Panel(Align.center(
+                    "[bold red]Ainda não existe classificação para essa categoria.[/]\n"
+                    "[italic green]Seja o primeiro a pontuar![/]"
+                ), border_style="red"))
+                input("\n[Enter] para voltar...")
+                continue
+
+            tabela = Table(show_header=True, header_style="bold magenta", expand=True, border_style="cyan")
+            tabela.add_column("Pos", justify="center", style="bold white", width=5)
+            tabela.add_column("Nome", style="green")
+            tabela.add_column("Cidade", style="cyan")
+            tabela.add_column("Pontos", justify="right", style="bold yellow")
+
+            for i, user in enumerate(lista_filtrada, start=1):
+                if i == 1: medalha = "🥇 "
+                elif i == 2: medalha = "🥈 "
+                elif i == 3: medalha = "🥉 "
+                else: medalha = f"{i}º "
+
+                estilo_linha = "bold white" if user and user.email == user.email else None
+
+                tabela.add_row(
+                    medalha,
+                    user.nome + (" (Você)" if user and user.email == user.email else ""),
+                    user.cidade,
+                    f"{user.pontos:.1f}",
+                    style=estilo_linha
+                )
+
+            console.print(tabela)
+            input("\n[Enter] para voltar ao filtro...")
+
+
+    def interface_indicacao(self):
+        utils.limpar_tela()
+        console.print(Panel(Align.center("[bold cyan]🎟️  TROCA DE PONTOS - VALE TRANSPORTE  🎟️[/]"), border_style="cyan"))
+
+        console.print("\n[bold white]Como funciona o benefício?[/]", justify="center")
+        
+        texto_explicativo = (
+            "\nO programa Ciclotech incentiva o uso de transporte público! "
+            "Seus pontos de reciclagem podem ser convertidos em créditos para o seu cartão de passagem.\n\n"
+            "[bold yellow]📍 ONDE REALIZAR A TROCA:[/]\n"
+            "Dirija-se presencialmente à [bold green]Secretaria do Meio Ambiente[/] da sua cidade.\n\n"
+            "[bold list]📝 O QUE LEVAR:[/]\n"
+            "   • Documento original com foto (RG ou CNH)\n"
+            "   • CPF informado no cadastro\n"
+            "   • Seu cartão de transporte (VEM, Bilhete Único, etc.)\n"
+        )
+        
+        console.print(Panel(texto_explicativo, title="Orientações", border_style="white"))
+
+        input("\nPressione Enter para voltar...")
+
+
+    def interface_perfil_user(self, user):
+        while True:
+            utils.limpar_tela()
+            console.print(Panel(Align.center(f"[bold green]PERFIL DE {user.nome.upper()}[/]"), border_style="green"))
+
+            t = Table(show_header=False, box=box.ROUNDED, expand=True)
+            t.add_column("Campo", style="cyan", justify="right")
+            t.add_column("Valor", style="white", justify="left")
+            
+            t.add_row("Email", user.email)
+            t.add_row("Telefone", user.telefone)
+            t.add_row("Cidade", user.cidade)
+            t.add_row("CPF", user.cpf)
+            t.add_row("Pontos", f"{user.pontos} 💎")
+            
+            console.print(Align.center(t))
+            
+            console.print("\n[1] ✏️  Editar Dados")
+            console.print("[2] 🔑 Trocar Senha")
+            console.print("\nPressione Enter para voltar...")
+
+            try:
+                op = int(input("\nOpção: "))
+            except ValueError:
+                return
+            
+            if op == 1:
+                user.editar_perfil_interativo(self)
+                
+            elif op == 2:
+                self.interface_trocar_senha_logado(user)
+    
+#======================
+#FUNCIONALIDADES PONTOS
+#======================
+
+    def interface_registrar_reciclagem(self):
+        utils.limpar_tela()
+        console.print("\n--- Materiais Disponíveis ---", style="bold yellow")
+        for i, r in enumerate(self.residuos): 
+            console.print(f"[{i}] {r.nome}")
+        console.print("---------------------------")
+        
+        email = input("Email do Cliente: ")
+        
+
+        try:
+            mat_input = input("Número do Material: ")
+            mat_num = int(mat_input)
+
+            if mat_num < 0 or mat_num >= len(self.residuos):
+                raise ValueError
+        except ValueError:
+            console.print("❌ Material inválido! Escolha o número da lista.", style="red")
+            utils.aguardar(2)
+            return 
+
+        
+        peso_final = 0.0
+        while True:
+            
+            peso_str = input("Peso (kg): ")
+            try:
+                peso_final = float(peso_str.replace(',', '.'))
+                
+                if peso_final <= 0:
+                    console.print("❌ O peso deve ser maior que zero.", style="red")
+                    continue
+                break 
+            except ValueError:
+                console.print("❌ Peso inválido! Digite apenas números.", style="red")
+
+       
+        try:
+            ok, msg = self.processar_reciclagem(email, mat_num, peso_final)
+            console.print(msg, style="green" if ok else "red")
+        except Exception as e:
+            console.print(f"❌ Erro interno: {e}", style="bold red")
+        
+        utils.aguardar(4)
+
+
+    def interface_perfil_ponto(self, ponto):
+        while True:
+            utils.limpar_tela()
+            console.print(Panel(Align.center(f"[bold magenta]PERFIL: {ponto.nome_ponto.upper()}[/]"), border_style="magenta"))
+
+            t = Table(show_header=False, box=box.ROUNDED, expand=True)
+            t.add_column("Campo", style="magenta", justify="right")
+            t.add_column("Valor", style="white", justify="left")
+            
+            t.add_row("Email", ponto.email)
+            t.add_row("CNPJ", ponto.cnpj)
+            t.add_row("Telefone", ponto.telefone)
+            
+            if isinstance(ponto.endereco, dict):
+                end_str = f"{ponto.endereco.get('rua')}, {ponto.endereco.get('numero')} - {ponto.endereco.get('cidade')}"
+                t.add_row("Endereço", end_str)
+            
+            console.print(Align.center(t))
+            
+            console.print("\n[1] ✏️  Editar Dados")
+            console.print("[2] 🔑 Trocar Senha")
+            console.print("\nPressione Enter para voltar...")
+
+            entrada = input("\nOpção: ")
+            
+            if not entrada:
+                break
+                
+            try:
+                op = int(entrada)
+            except ValueError:
+                return
+            
+            if op == 1:
+                ponto.editar_perfil_interativo(self)
+                
+            elif op == 2:
+                self.interface_trocar_senha_logado(ponto)

@@ -73,6 +73,7 @@ class Usuario(Conta):
             console.print("❌ Cancelado.", style="red")
             utils.aguardar(1)
 
+
     def to_dict(self):
         return {
             "nome": self.nome, "email": self.email, "senha": self.senha,
@@ -119,6 +120,7 @@ class PontoColeta(Conta):
                 console.print("✅ Endereço atualizado!", style="green")
         
         utils.aguardar(1)
+
 
     def to_dict(self):
         return {
