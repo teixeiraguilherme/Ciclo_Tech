@@ -25,6 +25,8 @@ class Conta:
         self.telefone = telefone
         self.endereco = endereco
 
+    def definir_nova_senha(self, nova_senha):
+        self.senha = nova_senha
 
 class Usuario(Conta):
     def __init__(self, nome, email, senha, telefone, endereco, cpf, cidade, pontos=0, historico=None):

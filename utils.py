@@ -95,30 +95,51 @@ def validar_cpf(cpf):
     return False, limpo
 
 
-def consultar_cnpj(cnpj):
-    cnpj_limpo = limpar_apenas_numeros(cnpj)
-    if len(cnpj_limpo) != 14:
-        return False, "CNPJ deve ter 14 dígitos."
+def consultar_cnpj_unificado(sistema=None):
+    while True:
+        cnpj_input = Prompt.ask("CNPJ (somente números)")
+        cnpj_limpo = limpar_apenas_numeros(cnpj_input) 
+
+        if len(cnpj_limpo) != 14:
+            console.print("❌ CNPJ deve ter 14 dígitos.", style="red")
+            if not confirmar_acao("Tentar novamente?"): return False, None
+            continue
+
+        if sistema and sistema.cnpj_existe(cnpj_limpo):
+            console.print("❌ Este CNPJ já está cadastrado no sistema!", style="bold red")
+            if not confirmar_acao("Tentar outro CNPJ?"): return False, None
+            continue
         
-    try:
-        response = requests.get(f"https://brasilapi.com.br/api/cnpj/v1/{cnpj_limpo}")
-        if response.status_code == 200:
-            dados = response.json()
-            info = {
-                "nome": dados.get("razao_social", ""),
-                "telefone": dados.get("ddd_telefone_1", ""),
-                "email": dados.get("email", ""),
-                "logradouro": dados.get("logradouro", ""),
-                "numero": dados.get("numero", ""),
-                "bairro": dados.get("bairro", ""),
-                "municipio": dados.get("municipio", ""),
-                "uf": dados.get("uf", "")
-            }
-            return True, info
-        else:
-            return False, "CNPJ não encontrado."
-    except Exception as e:
-        return False, f"Erro na conexão: {e}"
+        barra_progresso("Consultando Receita Federal")
+        try:
+            response = requests.get(f"https://brasilapi.com.br/api/cnpj/v1/{cnpj_limpo}", timeout=5)
+            
+            if response.status_code == 200:
+                dados = response.json()
+                
+                info = {
+                    "cnpj_limpo": cnpj_limpo,
+                    "nome": dados.get("razao_social", "").title(), 
+                    "logradouro": dados.get("logradouro", "").title(),
+                    "telefone": dados.get("ddd_telefone_1", ""),
+                    "email": dados.get("email", "").lower(),
+                    "numero": dados.get("numero", ""),
+                    "bairro": dados.get("bairro", "").title(),
+                    "municipio": dados.get("municipio", "").title()
+                }
+                return True, info
+            
+            elif response.status_code == 404:
+                console.print("❌ CNPJ não encontrado na base oficial.", style="red")
+            else:
+                console.print(f"❌ Erro na API. Código: {response.status_code}", style="red")
+
+        except Exception as e:
+            console.print("❌ Erro de conexão com a API.", style="red")
+
+        if not confirmar_acao("Deseja digitar o CNPJ novamente?"):
+            return False, None
+
 
 '''LOOPS DE INPUT'''
 
@@ -205,26 +226,3 @@ def solicitar_email_cadastro(sistema, atual=""):
             
         return email
 
-
-def consultar_cnpj_api(sistema=None):
-
-    while True:
-        cnpj_input = Prompt.ask("CNPJ (somente números)")
-        barra_progresso("Consultando")
-        
-        valido, retorno = consultar_cnpj(cnpj_input)
-        
-        if valido:
-            cnpj_limpo = limpar_apenas_numeros(cnpj_input)
-            
-            if sistema and sistema.cnpj_existe(cnpj_limpo):
-                console.print("❌ Este CNPJ já está cadastrado no sistema!", style="bold red")
-                if not confirmar_acao("Tentar outro CNPJ?"): return False, None
-                continue
-
-            retorno['cnpj_limpo'] = cnpj_limpo
-            return True, retorno
-        else:
-            console.print(f"❌ {retorno}", style="red")
-            if not confirmar_acao("Deseja tentar digitar o CNPJ novamente?"):
-                return False, None

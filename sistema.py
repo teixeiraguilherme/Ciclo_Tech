@@ -49,16 +49,14 @@ class SistemaCiclotech:
         return False
 
 
-    def redefinir_senha(self, email, nova_senha):
-        conta = next((u for u in self.usuarios if u.email == email), None)
-        if not conta:
-            conta = next((p for p in self.pontos_coleta if p.email == email), None)
-        
-        if conta:
-            conta.senha = nova_senha
-            self.salvar_dados()
-            return True, "Senha atualizada com sucesso!"
-        return False, "Email não encontrado."
+    def buscar_conta_por_email(self, email):
+        for u in self.usuarios:
+            if u.email == email: return u
+            
+        for p in self.pontos_coleta:
+            if p.email == email: return p
+            
+        return None
 
 
     def cadastrar_usuario(self, nome, email, senha, telefone, cidade, cpf):
@@ -182,7 +180,7 @@ class SistemaCiclotech:
     def interface_cadastro_ponto(self):
         console.print("--- NOVO PONTO DE COLETA ---", style="magenta")
         
-        sucesso, api = utils.consultar_cnpj_api(self) 
+        sucesso, api = utils.consultar_cnpj_unificado(self) 
         if not sucesso: return
 
         nome = Prompt.ask("Nome Fantasia", default=api['nome'])
@@ -209,41 +207,53 @@ class SistemaCiclotech:
         utils.aguardar(2)
 
 
-    def interface_esqueci_senha(self):
-        console.print("[yellow]RECUPERAÇÃO DE SENHA[/]", justify="center")
-        email = Prompt.ask("Email da conta")
-        
-        if not self.email_existe(email):
-            console.print("❌ Email não encontrado.", style="red"); utils.aguardar(2); return
-
-        cod = utils.gerar_codigo_verificacao()
-        console.print(f"\nCódigo de segurança: [bold cyan]{cod}[/]")
-        
-        if input("Digite o código: ") != str(cod):
-            console.print("❌ Código errado.", style="red"); utils.aguardar(2); return
-            
-        nova = utils.solicitar_senha_segura()
-        utils.barra_progresso("Atualizando")
-        self.redefinir_senha(email, nova)
-        console.print("✅ Senha redefinida!", style="green"); utils.aguardar(2)
-
-
     def interface_trocar_senha_logado(self, usuario):
         console.print("\n[bold yellow]ALTERAR SENHA[/]")
-        atual = Prompt.ask("Digite sua senha atual", password=True)
+        atual = Prompt.ask("Digite sua senha atual")
         
         if atual != usuario.senha:
             console.print("❌ Senha atual incorreta!", style="bold red")
             utils.aguardar(2); return
 
-        console.print("Digite a nova senha:")
-        nova = utils.solicitar_senha_segura()
+        utils.limpar_tela()
+        console.print("DIGITE A NOVA SENHA\n")
+        nova = utils.solicitar_senha_segura() 
         
-        if utils.confirmar_acao("Tem certeza?"):
-            usuario.senha = nova
+        if utils.confirmar_acao("Confirmar alteração de senha?"):
+            usuario.definir_nova_senha(nova)
             self.salvar_dados()
-            console.print("✅ Senha alterada!", style="bold green")
+            console.print("✅ Senha alterada com sucesso!", style="bold green")
+        
         utils.aguardar(2)
+
+
+    def interface_esqueci_senha(self):
+        console.print(Panel("[yellow]RECUPERAÇÃO DE SENHA[/]", border_style="yellow"))
+        email = Prompt.ask("Digite o email da conta")
+        conta = self.buscar_conta_por_email(email)
+        
+        if not conta:
+            console.print("❌ Email não encontrado no sistema.", style="red")
+            utils.aguardar(2); return
+
+        cod = utils.gerar_codigo_verificacao()
+        console.print(f"\n[italic]Simulação de envio de email...[/]")
+        console.print(f"Código de segurança: [bold cyan inverse] {cod} [/]")
+        
+        if input("\nDigite o código recebido: ") != str(cod):
+            console.print("❌ Código inválido.", style="red")
+            utils.aguardar(2); return
+            
+        console.print("\n[bold]Crie sua nova senha:[/]")
+        nova_senha = utils.solicitar_senha_segura()
+        
+        utils.barra_progresso("Atualizando Credenciais")
+        
+        conta.definir_nova_senha(nova_senha)
+        self.salvar_dados()
+        
+        console.print("✅ Senha redefinida! Faça login agora.", style="green")
+        utils.aguardar(3)
 
 #======================
 #FUNCIONALIDADES USER
