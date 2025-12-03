@@ -239,35 +239,27 @@ class SistemaCiclotech:
             console.print("❌ Email não encontrado no sistema.", style="red")
             utils.aguardar(2); return
 
-        # 2. Identifica o nome correto (Usuario tem 'nome', Ponto tem 'nome_ponto')
-        # O getattr tenta pegar 'nome', se não achar pega 'nome_ponto', se não achar usa 'Usuário'
         nome_real = getattr(conta, 'nome', getattr(conta, 'nome_ponto', 'Usuário'))
 
-        # 3. Gera o código (APENAS UMA VEZ)
         cod_seguranca = utils.gerar_codigo_verificacao()
         
         utils.barra_progresso("Enviando código para seu email")
 
-        # 4. Tenta enviar o email real
         enviou_email = utils.enviar_email_verificacao(conta.email, nome_real, cod_seguranca)
 
-        # 5. Feedback para o usuário
         if enviou_email:
             console.print(f"\n✅ Código enviado para [cyan]{conta.email}[/]!", style="bold green")
             console.print("[italic dim]Verifique sua caixa de entrada ou spam.[/]")
         else:
-            # Fallback: Se o email falhar (internet ruim), mostra na tela para teste (Modo Dev)
             console.print("\n[bold red]⚠️ Falha no envio do email (Modo Offline Ativado)[/]")
             console.print(f"Código de segurança (Simulação): [bold cyan inverse] {cod_seguranca} [/]")
 
-        # 6. Validação
         entrada = input("\nDigite o código recebido: ")
         
         if entrada != str(cod_seguranca):
             console.print("❌ Código inválido ou expirado.", style="bold red")
             utils.aguardar(2); return
-            
-        # 7. Troca de Senha
+          
         console.print("\n[bold]Código aceito! Crie sua nova senha:[/]")
         nova_senha = utils.solicitar_senha_segura()
         
